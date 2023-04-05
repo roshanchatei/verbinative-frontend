@@ -8,10 +8,12 @@ import {useRef, useState} from "react";
 
 //MUI Icons
 import LogoutIcon from '@mui/icons-material/Logout';
+import {useUser} from "@/src/store/UserContext";
 
 const Index = (props) => {
 
     const Router = useRouter();
+    const [user, setUser] = useUser();
     const { enqueueSnackbar } = useSnackbar();
 
     const handleGoToHome = async () => {
@@ -105,7 +107,7 @@ const Index = (props) => {
                         <MenuItem
                             sx={{ py: 1, color: 'red' }}
                             onClick={async () => {
-                                localStorage.removeItem("access-token");
+                                localStorage.removeItem("token");
                                 await Router.push('/login')
                                 enqueueSnackbar("Successfully Logged Out", {
                                     variant: "success",
@@ -117,7 +119,7 @@ const Index = (props) => {
                     </Menu>
                 </Box>
             </AppBar>
-            <Box pt={8} width={'100%'} display={'flex'} height={'100vh'}>
+            <Box pt={6} width={'100%'} display={'flex'} height={'100vh'}>
                 {props.children}
             </Box>
         </>

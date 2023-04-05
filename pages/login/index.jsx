@@ -21,22 +21,50 @@ const Index = () => {
 
     //change password visibility
     useEffect(() => {
-       if(isVisible){
-           setTimeout(() => {
-               setIsVisible(false)
-           }, 3000);
-       }
+        if(isVisible){
+            setTimeout(() => {
+                setIsVisible(false)
+            }, 3000);
+        }
     }, [isVisible]);
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
+        let data = {
+            email: email,
+            password: password
+        }
+        let options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data),
+            redirect: 'follow'
+        }
+
+        const response = await fetch("http://localhost:8080/user/login", options);
+        return response.json();
+    };
+
+    const handleClick = () => {
         setLoading(true);
-        localStorage.setItem("access-token", "xt123");
-        setTimeout(async () => {
-            await Router.push('/')
-        }, 2000);
-        enqueueSnackbar("Login Successful", {
-            variant: "success",
-        });
+
+        handleLogin().then(async (res) => {
+            console.log("success")
+            if (res.message === "success") {
+                localStorage.setItem("token", res.data.data.token);
+                await Router.push('/')
+                enqueueSnackbar("Login Successful", {
+                    variant: "success",
+                });
+            } else if (res.message === "error") {
+                enqueueSnackbar("Login Unsuccessful: Invalid credentials", {
+                    variant: "error",
+                });
+            }
+        })
+
+        setLoading(false);
     }
 
     return (
@@ -99,7 +127,7 @@ const Index = () => {
                                 px: 3
                             }}
                             disabled={(email === "" || password === "") || loading}
-                            onClick={handleLogin}
+                            onClick={handleClick}
                         >
                             {loading ? ( <CircularProgress size={23} />) : 'Login'}
 

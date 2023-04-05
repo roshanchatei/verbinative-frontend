@@ -21,7 +21,7 @@ export default function App({ Component, pageProps }) {
   const isInLoginPage = Router.pathname === "/login"
 
   useEffect(() => {
-    const token = localStorage.getItem("access-token");
+    const token = localStorage.getItem("token");
 
     if(token){
       //rest of the code
