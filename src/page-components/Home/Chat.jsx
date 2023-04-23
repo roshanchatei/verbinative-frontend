@@ -1,128 +1,98 @@
-import {Avatar, Box, CircularProgress, IconButton, InputAdornment, OutlinedInput, TextField} from "@mui/material";
+import {
+    Avatar,
+    Box,
+    CircularProgress,
+    IconButton,
+    InputAdornment, MenuItem,
+    Select,
+    TextField
+} from "@mui/material";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import SearchIcon from '@mui/icons-material/Search';
 import SendIcon from '@mui/icons-material/Send';
 import ChatContainer from "@/src/page-components/Home/ChatContainer";
 import {useEffect, useState} from "react";
 import InfiniteScroll from "react-infinite-scroller";
-import {useUser} from "@/src/store/UserContext";
 import {useSnackbar} from "notistack";
+import {translate} from "@/src/store/translate";
+import {languages} from "@/src/store/languages";
 
 const Chat = ({current, setCurrent}) => {
 
-    const [user] = useUser();
     const { enqueueSnackbar } = useSnackbar();
 
     const [loading, setLoading] = useState(false);
-    const [hasMore, setHasMore] = useState(true);
+    const [hasMore, setHasMore] = useState(false);
     const [message,setMessage] = useState('');
-    const [messageList, setMessageList] = useState([]);
-    const [newMessageList, setNewMessageList] = useState([]);
+    const [messageList, setMessageList] = useState(current?.messages | []);
+
 
     useEffect(() =>{
         setMessageList([]);
         setHasMore(true);
     },[current]);
 
-    // useEffect(() => {
-    //     if (newMessageList.length === 0) return;
-    //     let _messageList = messageList;
-    //     _messageList = [..._messageList, ...newMessageList];
-    //     setMessageList([..._messageList]);
-    // }, [newMessageList]);
-
-    // useEffect(() => {
-    //     if (current === null) return;
-    //     const token = localStorage.getItem(authCookieName);
-    //     const socketClient = io(process.env.baseUrl);
-    //     const socketApp = feathers();
-    //     socketApp.configure(
-    //         socketio(socketClient, {
-    //             transports: ['websocket'],
-    //         }),
-    //     );
-    //     socketClient.on('connect', () => {
-    //         socketClient.emit(
-    //             'create',
-    //             'authentication',
-    //             {
-    //                 strategy: 'jwt',
-    //                 accessToken: token,
-    //                 fcmId: 'sifw73rwejsdfdsrowe7rweoiewresdkfdsy',
-    //             },
-    //             function (e) {
-    //                 if (e) {
-    //                 } else {
-    //                     socketApp.service(services.chat).on('created', (message) => {
-    //                         setNewMessageList([message]);
-    //                     });
-    //                     socketApp.service(services.chat).on('patched', (message) => {
-    //                         setMessageList((prev) =>
-    //                             prev.map((each) => {
-    //                                 if (each._id === message._id) return message;
-    //                                 return each;
-    //                             }),
-    //                         );
-    //                     });
-    //                 }
-    //             },
-    //         );
-    //     });
-    // }, []);
-
-    // const LoadMessages = () => {
-    //     if (current === null) {
-    //         setHasMore(false);
-    //         return false;
-    //     }
-    //     chatService.find({
-    //         query: {
-    //             entityId: current?.id,
-    //             $populate: ['createdBy'],
-    //             $skip: messageList.length,
-    //         },
-    //     })
-    //         .then((res) => {
-    //             const { data, total } = res;
-    //             const newList = [...messageList, ...data];
-    //             setMessageList(newList);
-    //             setHasMore(newList.length < total);
-    //         })
-    //         .catch((error) => {
-    //             enqueueSnackbar(error.message ? error.message : 'Something went wrong', {
-    //                 variant: 'error',
-    //             });
-    //             setHasMore(false);
-    //         });
-    // };
-
-    // const sendMessage = () =>{
-    //     setLoading(true);
-    //     chatService.create({
-    //         "text": message,
-    //         "entityId": entity?.object?._id,
-    //         "entityType":entity?.entityType,
-    //         // "attachment": {
-    //         //     "type": 1,
-    //         //     "link": "https://kemnu-dev.s3.ap-south-1.amazonaws.com/2022/0302/1646234224565_Screenshot%202022-03-02%20at%203.41.19%20PM.png"
-    //         // }
-    //     })
-    //         .then((res) =>{
-    //             setMessageList([...messageList,res]);
-    //             setLoading(false);
-    //             setMessage('');
-    //         })
-    //         .catch((error) =>{
-    //             enqueueSnackbar(error.message ? error.message : 'Something went wrong', {
-    //                 variant: 'error',
-    //             });
-    //             setLoading(false);
-    //         });
-    // };
-
     const loadMoreMessages = () => {
 
     }
+
+    const userId = localStorage.getItem('id');
+
+    const [targetLanguage, setTargetLanguage] = useState(localStorage.getItem('language_id'))
+
+    useEffect(() => {
+        const ws = new WebSocket(`ws://localhost:8080/chat/ws/${current?.chatroom_id}`);
+
+        ws.addEventListener('open', () => {
+            console.log('connected');
+        });
+
+        ws.addEventListener('message', (event) => {
+            const message = JSON.parse(event.data);
+
+            if(message.Type === "MESSAGE"){
+                if(message['Content'].created_by !== userId)
+                    translate(message['Content'].text, targetLanguage)
+                    .then((translatedMessage) => {
+                        setMessageList((messages) => [...messages, {...message, Content: {...message['Content'], text: translatedMessage}}]);
+                    })
+                        .catch((e) => console.log(e))
+                else
+                    setMessageList((messages) => [...messages, message]);
+
+            }
+
+        });
+
+        ws.addEventListener('close', () => {
+            console.log('disconnected');
+        });
+
+        return () => {
+            ws.close();
+        };
+    }, [current, targetLanguage]);
+
+
+    const handleSendMessage = (event) => {
+
+        const messageObject = {
+            Type: "MESSAGE",
+            Content: {
+                Text: message,
+                Created_by: userId
+            }
+        };
+        const ws = new WebSocket(`ws://localhost:8080/chat/ws/${current?.chatroom_id}`);
+
+        ws.onopen = () => {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify(messageObject));
+                setMessage('');
+            }
+        };
+    };
+
 
 
     return (
@@ -137,11 +107,25 @@ const Chat = ({current, setCurrent}) => {
                     >
                         <ArrowBackIosIcon />
                     </IconButton>
-                    <Box fontWeight={500} fontSize={'20px'}>
+                    {/*<Box fontWeight={500} fontSize={'20px'}>*/}
+                    {/*    {*/}
+                    {/*        current?.name*/}
+                    {/*    }*/}
+                    {/*</Box>*/}
+                    <Select
+                        size={'small'}
+                        value={targetLanguage}
+                        onChange={(event) => {
+                            setTargetLanguage(event.target.value)
+                        }}
+                    >
+
                         {
-                            current.name !== '' ? current.name : current.username
+                            languages.map((each, index) => (
+                                <MenuItem key={each.value} value={each.value}>{each.name}</MenuItem>
+                            ))
                         }
-                    </Box>
+                    </Select>
                 </Box>
                 <Box
                     height={'calc(100vh - 169px)'}
@@ -167,14 +151,29 @@ const Chat = ({current, setCurrent}) => {
                         }
                         pageStart={0}
                     >
-                        <ChatContainer
-                            type={1}
-                            msg={'hello, i am the sender'}
-                        />
-                        <ChatContainer
-                            type={-1}
-                            msg={'hello, i am the reciever'}
-                        />
+                        {
+                            messageList.length > 0 && (
+                                <>
+                                    {
+                                        messageList.map((each, index) =>(
+                                            <ChatContainer
+                                                key={index}
+                                                type={each['Content'].created_by === userId ? 1 : 2}
+                                                msg={each['Content'].text}
+                                            />
+                                        ))
+                                    }
+                                </>
+                            )
+                        }
+                        {/*<ChatContainer*/}
+                        {/*    type={1}*/}
+                        {/*    msg={'hello, i am the sender'}*/}
+                        {/*/>*/}
+                        {/*<ChatContainer*/}
+                        {/*    type={-1}*/}
+                        {/*    msg={'hello, i am the reciever'}*/}
+                        {/*/>*/}
                     </InfiniteScroll>
 
                 </Box>
@@ -199,9 +198,16 @@ const Chat = ({current, setCurrent}) => {
                         onChange={(event) => {
                             setMessage(event.target.value)
                         }}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter') {
+                                handleSendMessage();
+                                event.preventDefault();
+                            }
+                        }}
                     />
                     <IconButton
-                        dis
+                        onClick={handleSendMessage}
+                        disabled={message === ''}
                     >
                         <SendIcon />
                     </IconButton>
@@ -211,4 +217,6 @@ const Chat = ({current, setCurrent}) => {
         </>
     );
 };
+
 export default Chat;
+

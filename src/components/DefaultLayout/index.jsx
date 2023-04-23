@@ -9,11 +9,12 @@ import {useRef, useState} from "react";
 //MUI Icons
 import LogoutIcon from '@mui/icons-material/Logout';
 import {useUser} from "@/src/store/UserContext";
+import {languages} from "@/src/store/languages";
+import {countries} from "@/src/store/countries";
 
 const Index = (props) => {
 
     const Router = useRouter();
-    const [user, setUser] = useUser();
     const { enqueueSnackbar } = useSnackbar();
 
     const handleGoToHome = async () => {
@@ -31,6 +32,14 @@ const Index = (props) => {
         }
         setOpen(false);
     };
+
+    const getCountryFlag = () => {
+        const country = localStorage.getItem('region');
+        const temp = countries.find(each => each.name === country);
+        console.log(temp)
+
+        return `https://flagcdn.com/40x30/${temp.code}.png`
+    }
 
     return(
         <>
@@ -58,65 +67,74 @@ const Index = (props) => {
                            VerbiNative
                         </Box>
                     </Box>
-                    <Box
-                        display={"flex"}
-                        alignItems={"center"}
-                        mr={4}
-                        ref={anchorRef}
-                        sx={{ cursor: "pointer" }}
-                        onClick={handleToggle}
-                    >
-                        <Avatar sx={{background: '#181935'}}>K</Avatar>
+                    <Box display={'flex'} alignItems={'center'}>
+                        {/*<img src={getCountryFlag()} alt={'flag'} />*/}
                         <Box
-                            bgcolor={"#cecece"}
-                            pr={1.5}
-                            pl={2}
-                            py={0.2}
-                            fontSize={"13px"}
-                            borderRadius={"5px"}
-                            ml={-1}
+                            display={"flex"}
+                            alignItems={"center"}
+                            mr={4}
+                            ref={anchorRef}
+                            sx={{ cursor: "pointer" }}
+                            onClick={handleToggle}
                         >
-                            Kartik
+                            <Avatar sx={{background: '#181935'}}>{localStorage.getItem('username')[0].toUpperCase()}</Avatar>
+                            <Box
+                                bgcolor={"#cecece"}
+                                pr={1.5}
+                                pl={2}
+                                py={0.2}
+                                fontSize={"13px"}
+                                borderRadius={"5px"}
+                                ml={-1}
+                            >
+                                Kartik
+                            </Box>
                         </Box>
-                    </Box>
-                    <Menu
-                        anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "right",
-                        }}
-                        transformOrigin={{
-                            vertical: "top",
-                            horizontal: "right",
-                        }}
-                        anchorEl={anchorRef.current}
-                        open={open}
-                        onClose={handleCloseMenu}
-                        sx={{
-                            "& .MuiPaper-root": {
-                                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.25)",
-                                borderRadius: "15px 0px 15px 15px",
-                            },
-                        }}
-                    >
-                        <MenuItem sx={{ py: 1 }}>Profile</MenuItem>
-                        <MenuItem sx={{ py: 1 }}>FAQ</MenuItem>
-                        <MenuItem sx={{ py: 1 }}>Support</MenuItem>
-                        <MenuItem sx={{ py: 1 }}>About Us</MenuItem>
-                        <MenuItem sx={{ py: 1 }}>Privacy Policy</MenuItem>
-                        <MenuItem sx={{ py: 1 }}>Term & Conditions</MenuItem>
-                        <MenuItem
-                            sx={{ py: 1, color: 'red' }}
-                            onClick={async () => {
-                                localStorage.removeItem("token");
-                                await Router.push('/login')
-                                enqueueSnackbar("Successfully Logged Out", {
-                                    variant: "success",
-                                });
+                        <Menu
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "right",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
+                            }}
+                            anchorEl={anchorRef.current}
+                            open={open}
+                            onClose={handleCloseMenu}
+                            sx={{
+                                "& .MuiPaper-root": {
+                                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.25)",
+                                    borderRadius: "15px 0px 15px 15px",
+                                },
                             }}
                         >
-                            Log Out
-                        </MenuItem>
-                    </Menu>
+                            <MenuItem sx={{ py: 1 }}>Profile</MenuItem>
+                            <MenuItem sx={{ py: 1 }}>FAQ</MenuItem>
+                            <MenuItem sx={{ py: 1 }}>Support</MenuItem>
+                            <MenuItem sx={{ py: 1 }}>About Us</MenuItem>
+                            <MenuItem sx={{ py: 1 }}>Privacy Policy</MenuItem>
+                            <MenuItem sx={{ py: 1 }}>Term & Conditions</MenuItem>
+                            <MenuItem
+                                sx={{ py: 1, color: 'red' }}
+                                onClick={async () => {
+                                    localStorage.removeItem("token");
+                                    localStorage.removeItem("id");
+                                    localStorage.removeItem("username");
+                                    localStorage.removeItem("region");
+                                    localStorage.removeItem("email");
+                                    localStorage.removeItem("language");
+                                    localStorage.removeItem("language_id");
+                                    await Router.push('/login')
+                                    enqueueSnackbar("Successfully Logged Out", {
+                                        variant: "success",
+                                    });
+                                }}
+                            >
+                                Log Out
+                            </MenuItem>
+                        </Menu>
+                    </Box>
                 </Box>
             </AppBar>
             <Box pt={6} width={'100%'} display={'flex'} height={'100vh'}>

@@ -34,7 +34,7 @@ const ChatCard = ({person, current, setCurrent}) => {
                 sx={{
                     cursor: 'pointer',
                     "&:hover": {
-                        backgroundColor: current?.id === person.id ? '#dedede' : '#eaeaea',
+                        backgroundColor: current?.user_id === person.user_id ? '#dedede' : '#eaeaea',
                         // backgroundColor: "#dedede",
                     },
                 }}
@@ -43,15 +43,16 @@ const ChatCard = ({person, current, setCurrent}) => {
                 }}
                 bgcolor={current?.id === person.id ? '#dedede' : 'transparent'}
             >
-                <Avatar sx={{background: '#181935'}}>{person.username[0].toUpperCase()}</Avatar>
+                <Avatar sx={{background: '#181935'}}>{person?.name[0].toUpperCase()}</Avatar>
                 <Box ml={2} width={'100%'}>
                     <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
                         <Box fontWeight={500} fontSize={'20px'} fontStyle={'italic'}>
-                            {person.username}
+                            {person?.name}
                         </Box>
-                        <Box>
-                            {getTimeOrDate(person.lastMessage)}
-                        </Box>
+                        {/*<Box>*/}
+                        {/*    /!*{getTimeOrDate(person.lastMessage)}*!/*/}
+                        {/*    12/01/23*/}
+                        {/*</Box>*/}
                     </Box>
                 </Box>
 

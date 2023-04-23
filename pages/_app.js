@@ -25,25 +25,25 @@ export default function App({ Component, pageProps }) {
 
     if(token){
       //rest of the code
-      if (Router.pathname === "/login") Router.push("/").then((e) => console.log(e));
+      if (Router.pathname === "/login" || Router.pathname === "/sign-up") Router.push("/").then((e) => console.log(e));
       // setLoading(false);
     }
     else{
-      if (Router.pathname !== "/login") Router.push("/login").then((e) => console.log(e));
+      if (Router.pathname !== "/sign-up") Router.push("/login").then((e) => console.log(e));
       // setLoading(false);
     }
 
     //dev
     setTimeout( () => {
       setLoading(false)
-    }, 2000);
+    }, 1000);
 
   }, [Router])
 
 
   return (
       <>
-        <UserProvider value={[user, setUser]}>
+        {/*<UserProvider value={[user, setUser]}>*/}
           <SnackbarProvider>
             <Head>
               <title>
@@ -66,7 +66,7 @@ export default function App({ Component, pageProps }) {
             </ThemeProvider>
 
           </SnackbarProvider>
-        </UserProvider>
+        {/*</UserProvider>*/}
       </>
 
   )

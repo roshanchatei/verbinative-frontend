@@ -74,7 +74,7 @@ export default function SearchAutocomplete() {
             }}
             onChange={(event, newValue) => {
                 // Router.push(`/jobs/${newValue._id}`);
-                console.log(newValue)
+                // console.log(newValue)
             }}
             renderInput={(params) => (
                 <TextField

@@ -42,19 +42,19 @@ const RedditTextField = styled((props) => (
         border: "2px solid #FFF",
         overflow: "hidden",
         borderRadius: 12,
-        backgroundColor: theme.palette.mode === "light" ? "#fcfcfb" : "#2b2b2b",
+        backgroundColor: "#F2F2F2",
         transition: theme.transitions.create([
             "border-color",
             "background-color",
             "box-shadow",
         ]),
         "&:hover": {
-            backgroundColor: "#FFF",
-            borderColor: theme.palette.primary.main,
+            backgroundColor: "#F2F2F2",
+            borderColor: "#c4deff",
         },
         "&.Mui-focused": {
-            backgroundColor: "transparent",
-            borderColor: theme.palette.primary.main,
+            backgroundColor: "#F2F2F2",
+            borderColor: "#4D9FFF",
         },
     },
 }));
@@ -73,6 +73,7 @@ const CustomTextField = (params) => {
         rows,
         img,
         endAdornment,
+        select,
         page,
     } = params;
     const classes = useStyles();

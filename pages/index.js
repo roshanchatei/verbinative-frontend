@@ -6,31 +6,26 @@ import Chat from "@/src/page-components/Home/Chat";
 
 const Index = () => {
 
-    const users = [
-        {
-            id: '1',
-            name: 'Roshan',
-            username: 'rkc',
-            lastMessage: '2023-02-16T05:19:10Z'
-        },
-        {
-            id: '2',
-            name: 'Ashutosh',
-            username: 'ash_king',
-            lastMessage: '2023-02-14T05:19:10Z'
-        },
-        {
-            id: '3',
-            name: '',
-            username: 'rahul',
-            lastMessage: '2023-02-09T05:19:10Z'
-        }
-    ]
+
+    const [chats, setChats] = useState([])
 
     const [current, setCurrent] = useState(null)
-    // useEffect(() => {
-    //     console.log(current)
-    // }, [current])
+
+    useEffect(() => {
+        const requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+
+        const user_id = localStorage.getItem('id')
+
+        fetch(`http://localhost:8080/chat/user/${user_id}/`, requestOptions)
+            .then(response => response.json())
+            .then(result => {
+                setChats(result?.data?.chatroom)
+            })
+            .catch(error => console.log('error', error));
+    }, [])
 
     return (
         <>
@@ -52,7 +47,7 @@ const Index = () => {
                                 }}
                             >
                                 {
-                                    users.map((each) => (
+                                    chats?.map((each) => (
                                         <ChatCard
                                             key={each.id} person={each}
                                             current={current}

@@ -8,6 +8,8 @@ import {Box, Button, AppBar, CircularProgress} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import {useUser} from "@/src/store/UserContext";
+import MainContainer from "@/src/components/MainContainer";
 
 const Index = () => {
 
@@ -18,6 +20,7 @@ const Index = () => {
     const [loading,  setLoading] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [user, setUser] = useUser();
 
     //change password visibility
     useEffect(() => {
@@ -39,7 +42,8 @@ const Index = () => {
                 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify(data),
-            redirect: 'follow'
+            redirect: 'follow',
+            mode: 'cors'
         }
 
         const response = await fetch("http://localhost:8080/user/login", options);
@@ -50,9 +54,14 @@ const Index = () => {
         setLoading(true);
 
         handleLogin().then(async (res) => {
-            console.log("success")
             if (res.message === "success") {
                 localStorage.setItem("token", res.data.data.token);
+                localStorage.setItem("id", res.data.data.user_id);
+                localStorage.setItem("username", res.data.data.username);
+                localStorage.setItem("region", res.data.data.region);
+                localStorage.setItem("email", res.data.data.email);
+                localStorage.setItem("language", res.data.data.language);
+                localStorage.setItem("language_id", res.data.data.language_id);
                 await Router.push('/')
                 enqueueSnackbar("Login Successful", {
                     variant: "success",
@@ -62,80 +71,88 @@ const Index = () => {
                     variant: "error",
                 });
             }
-        })
+
+        }).catch((e) => console.log(e))
 
         setLoading(false);
     }
 
+
     return (
         <>
-            {/*<AppBar*/}
-            {/*    color={"transparent"}*/}
-            {/*    elevation={0}*/}
-            {/*    position="fixed"*/}
-            {/*    sx={{*/}
-            {/*        background: '#F6F2E6',*/}
-            {/*    }}*/}
-            {/*>*/}
-            {/*    <Box pt={0.6} ml={2}>*/}
-            {/*        <img src={'/images/logo-dark.svg'} width={'55px'} />*/}
-            {/*    </Box>*/}
-
-            {/*</AppBar>*/}
-            <Box width={'100%'} height={'100vh'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                <Box bgcolor={'#898989'} width={'380px'} p={3} pt={4} mt={3} borderRadius={3}>
-                    <CustomTextField
-                        page={'login'}
-                        label={"Enter Email ID"}
-                        type={"email"}
-                        value={email}
-                        onChange={(event) => {
-                            setEmail(event.target.value);
-                        }}
-                    />
-                    <Box mt={2} />
-                    <CustomTextField
-                        page={'login'}
-                        label={"Enter Password"}
-                        type={isVisible ? 'text' : 'password'}
-                        value={password}
-                        onChange={(event) => {
-                            setPassword(event.target.value);
-                        }}
-                        endAdornment={
-                            password === "" ? (<></>) : (
-                                <IconButton
-                                    onClick={()=>{
-                                        setIsVisible(!isVisible)
-                                    }}
-                                >
-                                    {isVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
-                                </IconButton>
-                            )
-                        }
-                    />
-                    <Box mt={3} />
-                    <Box width={'100%'} display={'flex'} justifyContent={'center'}>
-                        <Button
-                            variant={'contained'}
-                            disableElevation
-                            sx={{
-                                textTransform: 'none',
-                                borderRadius: '10px',
-                                height: '37px',
-                                width: '85px',
-                                px: 3
-                            }}
-                            disabled={(email === "" || password === "") || loading}
-                            onClick={handleClick}
-                        >
-                            {loading ? ( <CircularProgress size={23} />) : 'Login'}
-
-                        </Button>
-                    </Box>
-
+            <MainContainer current={0}>
+                <Box fontSize={'24px'} fontWeight={500}>
+                    Login to your account.
                 </Box>
-            </Box>
+                <Box color={'#333333'} fontSize={'12px'}>
+                    Enter your registered email ID and password.
+                </Box>
+                <Box mt={5} />
+                <CustomTextField
+                    page={'login'}
+                    label={"Enter Email ID"}
+                    type={"email"}
+                    value={email}
+                    onChange={(event) => {
+                        setEmail(event.target.value);
+                    }}
+                />
+                <Box mt={2} />
+                <CustomTextField
+                    page={'login'}
+                    label={"Enter Password"}
+                    type={isVisible ? 'text' : 'password'}
+                    value={password}
+                    onChange={(event) => {
+                        setPassword(event.target.value);
+                    }}
+                    endAdornment={
+                        password === "" ? (<></>) : (
+                            <IconButton
+                                onClick={()=>{
+                                    setIsVisible(!isVisible)
+                                }}
+                            >
+                                {isVisible ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                            </IconButton>
+                        )
+                    }
+                />
+                <Box mt={4} />
+                <Button
+                    disabled={email === '' || password === ''}
+                    onClick={handleClick}
+                    disableElevation
+                    variant={"contained"}
+                    fullWidth
+                    sx={{
+                        backgroundColor: "#268AFF",
+                        color: "#FFF",
+                        borderRadius: "15px",
+                        zIndex: 2,
+                        py: 1.5,
+                        "&:hover": {
+                            // fontWeight: "600",
+                            backgroundColor: "#006ff8",
+                        },
+                        textTransform: 'none'
+                    }}
+                >
+                    Login
+                </Button>
+                <Box mt={5} display={'flex'} alignItems={'center'} width={'100%'} justifyContent={'center'}>
+                    <Box color={'#333333'} fontSize={'12px'}>
+                        Don’t have an account?
+                    </Box>
+                    <Box sx={{cursor: 'pointer'}} ml={0.5} fontWeight={500} fontSize={'14px'} color={'#006ff8'}
+                         onClick={async () => {
+                             await Router.push('/sign-up')
+                         }}
+                    >
+                        SIGNUP
+                    </Box>
+                </Box>
+            </MainContainer>
         </>
     );
 }
