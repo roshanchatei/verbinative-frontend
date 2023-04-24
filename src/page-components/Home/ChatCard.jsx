@@ -23,6 +23,16 @@ const ChatCard = ({person, current, setCurrent}) => {
             return dd + '/' + mm + '/' + yyyy;
         }
     }
+    const myUserId = localStorage.getItem('id');
+    const temp = person?.user_ids.find((each) => each !== myUserId)
+    console.log(temp)
+    // const getUsername = () => {
+    //     if(person?.user_ids === 2){
+    //
+    //     }
+    //     else return person?.name
+    // }
+    // getUsername()
 
     return (
         <>

@@ -34,7 +34,7 @@ const Index = () => {
                     <Grid item xs={5}>
                         <Box bgcolor={'#F4F4F4'} width={'100%'} height={'calc(100vh - 48px)'} borderRight={'1px solid #E1E1E1'}>
                             <Box width={'100%'} p={2} borderBottom={'1px solid #E1E1E1'}>
-                                <SearchAutocomplete />
+                                <SearchAutocomplete chats={chats} setChats={setChats} />
                             </Box>
                             <Box
                                 width={'100%'}
@@ -78,5 +78,4 @@ const Index = () => {
     );
 };
 export default Index;
-// Index.layout = null;
 Index.title = "Home";

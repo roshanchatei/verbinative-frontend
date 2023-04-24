@@ -41,7 +41,7 @@ const Chat = ({current, setCurrent}) => {
     const [targetLanguage, setTargetLanguage] = useState(localStorage.getItem('language_id'))
 
     useEffect(() => {
-        const ws = new WebSocket(`ws://localhost:8080/chat/ws/${current?.chatroom_id}`);
+        const ws = new WebSocket(`ws://localhost:8080/ws/chat/${current?.chatroom_id}`);
 
         ws.addEventListener('open', () => {
             console.log('connected');
@@ -83,7 +83,7 @@ const Chat = ({current, setCurrent}) => {
                 Created_by: userId
             }
         };
-        const ws = new WebSocket(`ws://localhost:8080/chat/ws/${current?.chatroom_id}`);
+        const ws = new WebSocket(`ws://localhost:8080/ws/chat/${current?.chatroom_id}`);
 
         ws.onopen = () => {
             if (ws.readyState === WebSocket.OPEN) {
