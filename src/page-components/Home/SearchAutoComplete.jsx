@@ -4,13 +4,10 @@ import Autocomplete from "@mui/material/Autocomplete";
 import CircularProgress from "@mui/material/CircularProgress";
 import SearchIcon from "@mui/icons-material/Search";
 import { useSnackbar } from "notistack";
-import { useRouter } from "next/router";
 import {useEffect, useState} from "react";
-import {languages} from "@/src/store/languages";
 
-export default function SearchAutocomplete({chats, setChats}) {
+const Index = ({chats, setChats}) => {
     const { enqueueSnackbar } = useSnackbar();
-    const Router = useRouter();
 
     const [open, setOpen] = useState(false);
     const [options, setOptions] = useState([]);
@@ -137,3 +134,5 @@ export default function SearchAutocomplete({chats, setChats}) {
         </>
     );
 }
+
+export default Index;

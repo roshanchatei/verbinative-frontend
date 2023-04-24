@@ -1,8 +1,8 @@
 import {Box, Grid} from "@mui/material";
-import SearchAutocomplete from "@/src/page-components/Home/SearchAutocomplete";
 import ChatCard from "@/src/page-components/Home/ChatCard";
 import {useState, useEffect} from "react";
 import Chat from "@/src/page-components/Home/Chat";
+import SearchAutoComplete from "@/src/page-components/Home/SearchAutoComplete";
 
 const Index = () => {
 
@@ -34,7 +34,7 @@ const Index = () => {
                     <Grid item xs={5}>
                         <Box bgcolor={'#F4F4F4'} width={'100%'} height={'calc(100vh - 48px)'} borderRight={'1px solid #E1E1E1'}>
                             <Box width={'100%'} p={2} borderBottom={'1px solid #E1E1E1'}>
-                                <SearchAutocomplete chats={chats} setChats={setChats} />
+                                <SearchAutoComplete chats={chats} setChats={setChats} />
                             </Box>
                             <Box
                                 width={'100%'}

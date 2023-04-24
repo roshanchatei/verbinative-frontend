@@ -1,11 +1,11 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { LinearProgress } from "@mui/material";
 import Box from "@mui/material/Box";
 
 const Loader = () => {
     const [progress, setProgress] = React.useState(0);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const timer = setInterval(() => {
             setProgress((oldProgress) => {
                 if (oldProgress === 100) {
