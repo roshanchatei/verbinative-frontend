@@ -1,6 +1,9 @@
 import {Avatar, Box} from "@mui/material";
+import {useEffect, useState} from "react";
 
 const ChatCard = ({person, current, setCurrent}) => {
+
+    const [username, setUsername] = useState('')
 
     function getTimeOrDate(timestamp) {
         const now = new Date();
@@ -23,16 +26,18 @@ const ChatCard = ({person, current, setCurrent}) => {
             return dd + '/' + mm + '/' + yyyy;
         }
     }
-    const myUserId = localStorage.getItem('id');
-    const temp = person?.user_ids.find((each) => each !== myUserId)
-    console.log(temp)
-    // const getUsername = () => {
-    //     if(person?.user_ids === 2){
-    //
-    //     }
-    //     else return person?.name
-    // }
-    // getUsername()
+
+    useEffect(() => {
+        if(person?.user_ids.length === 2){
+            const myUserId = localStorage.getItem('id');
+            const temp = person?.user_ids.find((each) => each !== myUserId)
+            fetch(`http://localhost:8080/user/${temp}`)
+                .then(response => response.json())
+                .then(result => setUsername(result?.data?.data?.username))
+                .catch(error => console.log('error', error));
+        }
+        else setUsername(person?.name)
+    }, [person])
 
     return (
         <>
@@ -44,25 +49,27 @@ const ChatCard = ({person, current, setCurrent}) => {
                 sx={{
                     cursor: 'pointer',
                     "&:hover": {
-                        backgroundColor: current?.user_id === person.user_id ? '#dedede' : '#eaeaea',
+                        backgroundColor: current?.chatroom_id === person.chatroom_id ? '#dedede' : '#ffffff',
                         // backgroundColor: "#dedede",
                     },
                 }}
                 onClick={() => {
                     setCurrent(person)
                 }}
-                bgcolor={current?.id === person.id ? '#dedede' : 'transparent'}
+                bgcolor={current?.chatroom_id === person.chatroom_id ? '#dedede' : 'transparent'}
             >
-                <Avatar sx={{background: '#181935'}}>{person?.name[0].toUpperCase()}</Avatar>
+                <Avatar sx={{background: '#181935'}}>{username[0]?.toUpperCase()}</Avatar>
                 <Box ml={2} width={'100%'}>
                     <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-                        <Box fontWeight={500} fontSize={'20px'} fontStyle={'italic'}>
-                            {person?.name}
+                        <Box fontWeight={500} fontSize={'18px'} fontStyle={'italic'}>
+                            {username}
                         </Box>
-                        {/*<Box>*/}
-                        {/*    /!*{getTimeOrDate(person.lastMessage)}*!/*/}
-                        {/*    12/01/23*/}
-                        {/*</Box>*/}
+                        <Box>
+                            {
+                                person?.messages ? getTimeOrDate(person?.messages[person.messages.length - 1].timestamp)
+                                                    : ''
+                            }
+                        </Box>
                     </Box>
                 </Box>
 

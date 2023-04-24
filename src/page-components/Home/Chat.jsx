@@ -16,31 +16,52 @@ import InfiniteScroll from "react-infinite-scroller";
 import {useSnackbar} from "notistack";
 import {translate} from "@/src/store/translate";
 import {languages} from "@/src/store/languages";
+import localFont from "@next/font/local";
 
 const Chat = ({current, setCurrent}) => {
 
     const { enqueueSnackbar } = useSnackbar();
+    const userId = localStorage.getItem('id');
 
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(false);
     const [message,setMessage] = useState('');
-    const [messageList, setMessageList] = useState(current?.messages | []);
+    const [messageList, setMessageList] = useState([]);
 
 
     useEffect(() =>{
-        setMessageList([]);
+        setMessageList(current.messages);
         setHasMore(true);
     },[current]);
+
+    // useEffect(() => {
+    //     const translateMessages = async () => {
+    //         const translated = await Promise.all(
+    //             messageList.map(async message => {
+    //                 if (message.created_by !== userId) {
+    //                     const translatedText = await translate(message.text);
+    //                     return {
+    //                         ...message,
+    //                         text: translatedText
+    //                     };
+    //                 }
+    //                 return message;
+    //             })
+    //         );
+    //         setMessageList(translated);
+    //     };
+    //     translateMessages();
+    // }, [messageList]);
+
 
     const loadMoreMessages = () => {
 
     }
 
-    const userId = localStorage.getItem('id');
-
     const [targetLanguage, setTargetLanguage] = useState(localStorage.getItem('language_id'))
 
     useEffect(() => {
+
         const ws = new WebSocket(`ws://localhost:8080/ws/chat/${current?.chatroom_id}`);
 
         ws.addEventListener('open', () => {
@@ -54,11 +75,11 @@ const Chat = ({current, setCurrent}) => {
                 if(message['Content'].created_by !== userId)
                     translate(message['Content'].text, targetLanguage)
                     .then((translatedMessage) => {
-                        setMessageList((messages) => [...messages, {...message, Content: {...message['Content'], text: translatedMessage}}]);
+                        setMessageList((messages) => [...messages, {...message['Content'], text: translatedMessage}]);
                     })
                         .catch((e) => console.log(e))
                 else
-                    setMessageList((messages) => [...messages, message]);
+                    setMessageList((messages) => [...messages, message['Content']]);
 
             }
 
@@ -72,7 +93,6 @@ const Chat = ({current, setCurrent}) => {
             ws.close();
         };
     }, [current, targetLanguage]);
-
 
     const handleSendMessage = (event) => {
 
@@ -107,25 +127,25 @@ const Chat = ({current, setCurrent}) => {
                     >
                         <ArrowBackIosIcon />
                     </IconButton>
-                    {/*<Box fontWeight={500} fontSize={'20px'}>*/}
-                    {/*    {*/}
-                    {/*        current?.name*/}
-                    {/*    }*/}
-                    {/*</Box>*/}
-                    <Select
-                        size={'small'}
-                        value={targetLanguage}
-                        onChange={(event) => {
-                            setTargetLanguage(event.target.value)
-                        }}
-                    >
-
+                    <Box fontWeight={500} fontSize={'20px'}>
                         {
-                            languages.map((each, index) => (
-                                <MenuItem key={each.value} value={each.value}>{each.name}</MenuItem>
-                            ))
+                            current?.name
                         }
-                    </Select>
+                    </Box>
+                    {/*<Select*/}
+                    {/*    size={'small'}*/}
+                    {/*    value={targetLanguage}*/}
+                    {/*    onChange={(event) => {*/}
+                    {/*        setTargetLanguage(event.target.value)*/}
+                    {/*    }}*/}
+                    {/*>*/}
+
+                    {/*    {*/}
+                    {/*        languages.map((each, index) => (*/}
+                    {/*            <MenuItem key={each.value} value={each.value}>{each.name}</MenuItem>*/}
+                    {/*        ))*/}
+                    {/*    }*/}
+                    {/*</Select>*/}
                 </Box>
                 <Box
                     height={'calc(100vh - 169px)'}
@@ -152,14 +172,14 @@ const Chat = ({current, setCurrent}) => {
                         pageStart={0}
                     >
                         {
-                            messageList.length > 0 && (
+                            messageList?.length > 0 && (
                                 <>
                                     {
                                         messageList.map((each, index) =>(
                                             <ChatContainer
                                                 key={index}
-                                                type={each['Content'].created_by === userId ? 1 : 2}
-                                                msg={each['Content'].text}
+                                                type={each?.created_by === userId ? 1 : 2}
+                                                msg={each?.text}
                                             />
                                         ))
                                     }

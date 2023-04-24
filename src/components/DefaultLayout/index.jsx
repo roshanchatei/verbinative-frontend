@@ -1,6 +1,6 @@
 import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
-import {Avatar, Box, Menu, MenuItem} from "@mui/material";
+import {Avatar, Box, Drawer, Menu, MenuItem} from "@mui/material";
 import PropTypes from "prop-types";
 import {useRouter} from "next/router";
 import {useSnackbar} from "notistack";
@@ -8,9 +8,9 @@ import {useRef, useState} from "react";
 
 //MUI Icons
 import LogoutIcon from '@mui/icons-material/Logout';
-import {useUser} from "@/src/store/UserContext";
-import {languages} from "@/src/store/languages";
+import CloseIcon from "@mui/icons-material/Close";
 import {countries} from "@/src/store/countries";
+import Profile from "@/src/page-components/Home/Profile";
 
 const Index = (props) => {
 
@@ -40,6 +40,14 @@ const Index = (props) => {
 
         return `https://flagcdn.com/40x30/${temp.code}.png`
     }
+
+    //Drawer Helper State
+    const [mobOpen, setMobOpen] = useState(false);
+    const handleMobDrawer = () => {
+        setMobOpen(!mobOpen);
+        setOpen(false)
+    };
+    const drawerWidth = 500;
 
     return(
         <>
@@ -87,7 +95,7 @@ const Index = (props) => {
                                 borderRadius={"5px"}
                                 ml={-1}
                             >
-                                Kartik
+                                {localStorage.getItem('username')}
                             </Box>
                         </Box>
                         <Menu
@@ -109,7 +117,7 @@ const Index = (props) => {
                                 },
                             }}
                         >
-                            <MenuItem sx={{ py: 1 }}>Profile</MenuItem>
+                            <MenuItem onClick={handleMobDrawer} sx={{ py: 1 }}>Profile</MenuItem>
                             <MenuItem sx={{ py: 1 }}>FAQ</MenuItem>
                             <MenuItem sx={{ py: 1 }}>Support</MenuItem>
                             <MenuItem sx={{ py: 1 }}>About Us</MenuItem>
@@ -137,6 +145,36 @@ const Index = (props) => {
                     </Box>
                 </Box>
             </AppBar>
+
+
+            <Drawer anchor={'right'} open={mobOpen} onClose={handleMobDrawer}>
+                <Box width={drawerWidth}>
+                    <Box
+                        width={"100%"}
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            px: 3,
+                            pt: 4,
+                            pb: 3,
+                        }}
+                        onClick={() => {
+                            setMobOpen(false);
+                        }}
+                    >
+                        <Box fontWeight={600} fontSize={'24px'}>
+                            Profile
+                        </Box>
+                        <IconButton onClick={handleMobDrawer}>
+                            <CloseIcon sx={{color: 'red'}} />
+                        </IconButton>
+                    </Box>
+                    <Profile />
+                </Box>
+            </Drawer>
+
+
             <Box pt={6} width={'100%'} display={'flex'} height={'100vh'}>
                 {props.children}
             </Box>

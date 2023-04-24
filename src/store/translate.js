@@ -1,5 +1,4 @@
 export const translate = (message, target) => {
-    console.log(message, target)
     return fetch(
         `https://api.edenai.run/v2/translation/automatic_translation`,
         {

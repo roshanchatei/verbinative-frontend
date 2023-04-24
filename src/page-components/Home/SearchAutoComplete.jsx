@@ -51,7 +51,7 @@ const Index = ({chats, setChats}) => {
         myHeaders.append("Content-Type", "application/json");
 
         let raw = JSON.stringify({
-            "name": "test5",
+            "name": "test10",
             "user_ids": [
                 localStorage.getItem('id'),
                 otherUser?.user_id

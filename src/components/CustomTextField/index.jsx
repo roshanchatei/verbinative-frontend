@@ -75,6 +75,7 @@ const CustomTextField = (params) => {
         endAdornment,
         select,
         page,
+        disabled,
     } = params;
     const classes = useStyles();
 

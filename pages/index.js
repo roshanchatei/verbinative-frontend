@@ -32,18 +32,19 @@ const Index = () => {
             <Box width={'100%'}>
                 <Grid container>
                     <Grid item xs={5}>
-                        <Box bgcolor={'#F4F4F4'} width={'100%'} height={'calc(100vh - 48px)'} borderRight={'1px solid #E1E1E1'}>
+                        <Box bgcolor={'#F4F4F4'} width={'100%'} borderRight={'1px solid #E1E1E1'}>
                             <Box width={'100%'} p={2} borderBottom={'1px solid #E1E1E1'}>
                                 <SearchAutoComplete chats={chats} setChats={setChats} />
                             </Box>
                             <Box
                                 width={'100%'}
+                                height={'calc(100vh - 129px)'}
                                 sx={{
                                     scrollBehavior: "smooth",
                                     overflowY: "scroll",
-                                    '&::-webkit-scrollbar': {
-                                        display: 'none'
-                                    }
+                                    // '&::-webkit-scrollbar': {
+                                    //     display: 'none'
+                                    // }
                                 }}
                             >
                                 {
