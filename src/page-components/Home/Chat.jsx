@@ -7,6 +7,7 @@ import {useEffect, useRef, useState} from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import {useSnackbar} from "notistack";
 import {translate} from "@/src/store/translate";
+import GroupChat from "@/src/page-components/Home/GroupChat";
 
 const Chat = ({current, setCurrent, loading, setLoading}) => {
 
@@ -15,6 +16,8 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
 
     const userId = localStorage.getItem('id');
     const username = localStorage.getItem('username');
+
+    const [isServer, setIsServer] = useState(current?.user_ids.length > 2)
 
     const [hasMore, setHasMore] = useState(false);
     const [message,setMessage] = useState('');
@@ -28,8 +31,8 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
         setMessageListLength(0)
         setMessageList([]);
         setHasMore(true);
-        if(current?.messages?.length)
-            LoadMessages()
+        // if(current?.messages?.length)
+        //     LoadMessages()
     },[current]);
 
     const translateMessages = async (temp) => {
@@ -51,14 +54,14 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
             setHasMore(false);
             return;
         }
-
+        if(loading)
+            return;
         setLoading(true)
 
         fetch(`http://localhost:8080/chat/${current.chatroom_id}/messages?limit=${10}&skip=${messageListLength}`)
             .then(response => response.json())
             .then(async (res) => {
                 const data = res?.data?.messages;
-                console.log(data)
                 const total = res?.data?.msg_len;
                 // const translatedMessages = await translateMessages(data.reverse());
                 const translatedMessages = data.reverse();
@@ -87,7 +90,6 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
 
         ws.addEventListener('message', (event) => {
             const message = JSON.parse(event.data);
-            console.log(message)
 
             if(message.Type === "MESSAGE"){
                 if(message['Content'].created_by !== userId)
@@ -139,6 +141,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
     }, [loading]);
 
 
+
     return (
         <>
             <Box width={'100%'} height={'calc(100vh - 48px)'} position={'relative'}>
@@ -152,11 +155,17 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
                     >
                         <ArrowBackIosIcon />
                     </IconButton>
-                    <Box fontWeight={500} fontSize={'20px'}>
-                        {
-                            current?.name
-                        }
-                    </Box>
+                    {
+                        isServer ? (
+                            <GroupChat current={current} loading={loading} />
+                        ) : (
+                            <Box fontWeight={500} fontSize={'20px'}>
+                                {
+                                    current?.name
+                                }
+                            </Box>
+                        )
+                    }
                 </Box>
                 {/*{*/}
                 {/*    loading && (*/}
@@ -184,7 +193,6 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
                         background: `url('/images/chat-bg2.jpg')`,
                         backgroundSize: "cover",
                         backgroundRepeat: "no-repeat",
-                        opacity: 0.9,
                     }}
                     ref={containerRef}
                 >
@@ -209,6 +217,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
                                             <ChatContainer
                                                 key={index}
                                                 each={each}
+                                                isServer={isServer}
                                             />
                                         ))
                                     }

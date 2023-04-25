@@ -2,10 +2,12 @@ import {Avatar, Box} from "@mui/material";
 import {useEffect, useState} from "react";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import {getTimeOrDate} from "@/src/store/getTimeOrDate";
+import GroupIcon from '@mui/icons-material/Group';
 
 const ChatCard = ({person, current, setCurrent, loading}) => {
 
     const [username, setUsername] = useState('')
+    const [isServer, setIsServer] = useState(person?.user_ids.length > 2)
 
     useEffect(() => {
         if(person?.user_ids.length === 2){
@@ -42,7 +44,15 @@ const ChatCard = ({person, current, setCurrent, loading}) => {
                 {
                     current?.chatroom_id === person.chatroom_id && <ArrowRightIcon sx={{ml: -3}} />
                 }
-                <Avatar sx={{background: '#181935'}}>{username[0]?.toUpperCase()}</Avatar>
+                {
+                    isServer ? (
+                        <Avatar sx={{backgroundColor: '#131348'}}>
+                            <GroupIcon />
+                        </Avatar>
+                    ) : (
+                        <Avatar sx={{backgroundColor: '#181935'}}>{username[0]?.toUpperCase()}</Avatar>
+                    )
+                }
                 <Box ml={2} width={'100%'}>
                     <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
                         <Box fontWeight={500} fontSize={'18px'} fontStyle={'italic'}>
@@ -51,7 +61,7 @@ const ChatCard = ({person, current, setCurrent, loading}) => {
                         <Box>
                             {
                                 person?.messages ? getTimeOrDate(person?.messages[person.messages.length - 1].timestamp)
-                                                    : ''
+                                    : ''
                             }
                         </Box>
                     </Box>

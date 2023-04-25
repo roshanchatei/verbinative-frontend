@@ -75,7 +75,6 @@ const Index = ({username, setUsername, country, setCountry, language, setLanguag
                     zIndex: 2,
                     py: 1.5,
                     "&:hover": {
-                        // fontWeight: "600",
                         backgroundColor: "#006ff8",
                     },
                     textTransform: 'none'

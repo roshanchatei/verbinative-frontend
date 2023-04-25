@@ -84,9 +84,9 @@ const Index = ({email, setEmail, password, setPassword, confirmPassword, setConf
             />
             <Box mt={4} />
             <Button
-                disabled={email === '' || password === '' || confirmPassword === ''}
+                disabled={email === '' || password === '' || confirmPassword === '' || (password !== confirmPassword)}
                 onClick={() => {
-                    setCurrent(1)
+                        setCurrent(1)
                 }}
                 disableElevation
                 variant={"contained"}
@@ -98,7 +98,6 @@ const Index = ({email, setEmail, password, setPassword, confirmPassword, setConf
                     zIndex: 2,
                     py: 1.5,
                     "&:hover": {
-                        // fontWeight: "600",
                         backgroundColor: "#006ff8",
                     },
                     textTransform: 'none'

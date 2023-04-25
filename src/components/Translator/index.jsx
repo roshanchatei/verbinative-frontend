@@ -205,8 +205,6 @@ const Index = () => {
                             }
                         />
                     </Box>
-
-
                 </Box>
             </Drawer>
         </>
