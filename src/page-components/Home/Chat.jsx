@@ -11,7 +11,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import SearchIcon from '@mui/icons-material/Search';
 import SendIcon from '@mui/icons-material/Send';
 import ChatContainer from "@/src/page-components/Home/ChatContainer";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import {useSnackbar} from "notistack";
 import {translate} from "@/src/store/translate";
@@ -25,45 +25,70 @@ const Chat = ({current, setCurrent}) => {
     const [hasMore, setHasMore] = useState(false);
     const [message,setMessage] = useState('');
     const [messageList, setMessageList] = useState([]);
-    // const [newMessageList, setNewMessageList] = useState([]);
+    const [newMessageList, setNewMessageList] = useState([]);
+
+    const messageListLength = useRef(messageList.length);
+
 
     const [targetLanguage, setTargetLanguage] = useState(localStorage.getItem('language_id'))
 
-    // useEffect(() =>{
-    //     setMessageList([]);
-    //     setHasMore(true);
-    // },[current]);
 
     const [oldLoading, setOldLoading] = useState(false)
 
-    useEffect(() => {
-        let temp = current?.messages;
-        if(current?.messages){
-            const translateMessages = async () => {
-                setOldLoading(true)
-                const translated = await Promise.all(
-                    temp?.map(async message => {
-                        if (message.created_by !== userId) {
-                            const translatedText = await translate(message.text, targetLanguage);
-                            return {
-                                ...message,
-                                text: translatedText
-                            };
-                        }
-                        else return message;
-                    })
-                );
-                setMessageList([...translated]);
-                // console.log(translated, "my trans initial message")
-                setOldLoading(false)
-            };
-            translateMessages().then(res => console.log(res));
+
+    useEffect(() =>{
+        setMessageList([]);
+        setHasMore(true);
+    },[current]);
+
+    const translateMessages = async (temp) => {
+        // setOldLoading(true)
+        const translated = await Promise.all(
+            temp?.map(async message => {
+                if (message.created_by !== userId) {
+                    const translatedText = await translate(message.text, targetLanguage);
+                    return {
+                        ...message,
+                        text: translatedText
+                    };
+                }
+                else return message;
+            })
+        );
+
+        return translated;
+    };
+
+    const LoadMessages = () => {
+        if (current.chatroom_id === null) {
+            setHasMore(false);
+            return;
         }
-    }, [current]);
+        // setOldLoading(true)
 
-    const loadMoreMessages = () => {
 
-    }
+        fetch(`http://localhost:8080/chat/${current.chatroom_id}/messages?limit=${5}&skip=${messageListLength.current}`)
+            .then(response => response.json())
+            .then(async (res) => {
+                const data = res?.data?.messages;
+                // const total = res?.data?.messages.length;
+                const total = 40;
+                const translatedMessages = await translateMessages(data.reverse());
+                console.log(translatedMessages)
+                setHasMore(messageListLength.current + data.length < total);
+                setMessageList(prevList => {
+                    messageListLength.current = prevList.length + translatedMessages.length;
+                    return [...translatedMessages, ...prevList];
+                });
+            })
+            .catch((error) => {
+                enqueueSnackbar(error.message ? error.message : 'Something went wrong', {
+                    variant: 'error',
+                });
+                setHasMore(false);
+            })
+            // .finally(() => setOldLoading(false))
+    };
 
     useEffect(() => {
 
@@ -79,9 +104,9 @@ const Chat = ({current, setCurrent}) => {
             if(message.Type === "MESSAGE"){
                 if(message['Content'].created_by !== userId)
                     translate(message['Content'].text, targetLanguage)
-                    .then((translatedMessage) => {
-                        setMessageList((messages) => [...messages, {...message['Content'], text: translatedMessage}]);
-                    })
+                        .then((translatedMessage) => {
+                            setMessageList((messages) => [...messages, {...message['Content'], text: translatedMessage}]);
+                        })
                         .catch((e) => console.log(e))
                 else
                     setMessageList((messages) => [...messages, message['Content']]);
@@ -171,10 +196,10 @@ const Chat = ({current, setCurrent}) => {
                         >
 
                             <InfiniteScroll
-                                loadMore={loadMoreMessages}
                                 hasMore={hasMore}
                                 isReverse={true}
-                                // loadMore={LoadMessages}
+                                // loadMore={loadMoreMessages}
+                                loadMore={LoadMessages}
                                 loader={
                                     <Box align={'center'} key={'all-messages'} p={2}>
                                         <CircularProgress size={28} />

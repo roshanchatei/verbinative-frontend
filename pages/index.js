@@ -6,7 +6,6 @@ import SearchAutoComplete from "@/src/page-components/Home/SearchAutoComplete";
 
 const Index = () => {
 
-
     const [chats, setChats] = useState([])
 
     const [current, setCurrent] = useState(null)
