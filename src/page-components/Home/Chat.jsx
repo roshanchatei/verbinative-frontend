@@ -31,8 +31,6 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
         setMessageListLength(0)
         setMessageList([]);
         setHasMore(true);
-        // if(current?.messages?.length)
-        //     LoadMessages()
     },[current]);
 
     const translateMessages = async (temp) => {
