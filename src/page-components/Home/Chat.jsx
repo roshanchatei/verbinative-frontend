@@ -28,7 +28,8 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
         setMessageListLength(0)
         setMessageList([]);
         setHasMore(true);
-        LoadMessages()
+        if(current?.messages?.length)
+            LoadMessages()
     },[current]);
 
     const translateMessages = async (temp) => {
@@ -57,6 +58,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
             .then(response => response.json())
             .then(async (res) => {
                 const data = res?.data?.messages;
+                console.log(data)
                 const total = res?.data?.msg_len;
                 // const translatedMessages = await translateMessages(data.reverse());
                 const translatedMessages = data.reverse();
