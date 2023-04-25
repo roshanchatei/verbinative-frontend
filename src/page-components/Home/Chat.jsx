@@ -87,7 +87,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
 
             if(message.Type === "MESSAGE"){
                 if(message['Content'].created_by !== userId)
-                    translate(message['Content'].text, targetLanguage)
+                    translate(message['Content'].text, 'auto-detect', targetLanguage)
                         .then((translatedMessage) => {
                             setMessageList((messages) => [...messages, {...message['Content'], text: translatedMessage}]);
                         })

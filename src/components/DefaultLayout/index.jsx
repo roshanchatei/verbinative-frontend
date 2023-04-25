@@ -11,6 +11,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from "@mui/icons-material/Close";
 import {countries} from "@/src/store/countries";
 import Profile from "@/src/page-components/Home/Profile";
+import Translator from "@/src/components/Translator";
 
 const Index = (props) => {
 
@@ -77,6 +78,8 @@ const Index = (props) => {
                     </Box>
                     <Box display={'flex'} alignItems={'center'}>
                         {/*<img src={getCountryFlag()} alt={'flag'} />*/}
+                        <Translator />
+                        <Box ml={2} />
                         <Box
                             display={"flex"}
                             alignItems={"center"}
