@@ -4,23 +4,61 @@ import {useState} from "react";
 import {countries} from "@/src/store/countries";
 import {languages} from "@/src/store/languages";
 import EditIcon from '@mui/icons-material/Edit';
+import {useSnackbar} from "notistack";
 
 const Profile = () => {
 
+    const { enqueueSnackbar } = useSnackbar();
+
+    const userId = localStorage.getItem('id');
     const avatarKey = localStorage.getItem('username')[0].toUpperCase();
 
+    const [loading,  setLoading] = useState(false);
     const [email, setEmail] = useState(localStorage.getItem("email"));
     const [username, setUsername] = useState(localStorage.getItem("username"));
-    // const [password, setPassword] = useState("");
-    // const [confirmPassword, setConfirmPassword] = useState("");
     const [country, setCountry] = useState(localStorage.getItem("region"));
     const [language, setLanguage] = useState(localStorage.getItem("language"));
     const [languageId, setLanguageId] = useState(localStorage.getItem("language_id"));
 
     const [canEdit, setCanEdit] = useState(false)
-
     const handleEdit = () => {
         setCanEdit(!canEdit)
+    }
+
+    const handleProfileChange = () => {
+        setLoading(true)
+
+        let data = {
+            "region": country,
+            "language": language,
+            "language_id": languageId
+        };
+
+        let requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            body: JSON.stringify(data),
+            redirect: 'follow'
+        };
+
+        fetch(`http://localhost:8080/user/${userId}/`, requestOptions)
+            .then(response => response.json())
+            .then(res =>{
+                localStorage.setItem("token", res.data.data.token);
+                localStorage.setItem("id", res.data.data.user_id);
+                localStorage.setItem("username", res.data.data.username);
+                localStorage.setItem("region", res.data.data.region);
+                localStorage.setItem("email", res.data.data.email);
+                localStorage.setItem("language", res.data.data.language);
+                localStorage.setItem("language_id", res.data.data.language_id);
+                enqueueSnackbar("Profile changed successfully", {
+                    variant: "success",
+                });
+            })
+            .catch(error => console.log('error', error))
+            .finally(() => setLoading(false))
     }
 
 
@@ -66,7 +104,7 @@ const Profile = () => {
                 />
                 <Box mt={2} />
                 <CustomTextField
-                    disabled={!canEdit}
+                    disabled
                     page={'login'}
                     label={"Enter Email ID"}
                     type={"email"}
@@ -116,11 +154,12 @@ const Profile = () => {
                 <Box mt={11} />
                 <Button
                     disabled={
+                        loading ||
                         email === localStorage.getItem('email') &&
                         country === localStorage.getItem('region') &&
                         language === localStorage.getItem('language')
                     }
-                    // onClick={handleSignUp}
+                    onClick={handleProfileChange}
                     disableElevation
                     variant={"contained"}
                     fullWidth

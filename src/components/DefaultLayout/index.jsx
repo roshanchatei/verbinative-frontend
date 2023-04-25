@@ -57,17 +57,18 @@ const Index = (props) => {
                 elevation={0}
                 position="fixed"
                 sx={{
-                    background: '#F6F2E6',
+                    background: '#4D9FFF',
                 }}
             >
                 <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} color={'#181935'}>
                     <Box display={'flex'} alignItems={'center'}>
-                        <Box pt={0.7} ml={2} mr={6} onClick={handleGoToHome} sx={{cursor: 'pointer'}}>
-                            <img src={'/images/logo-color.svg'} width={'55px'} />
+                        <Box pt={0.7} ml={2} mr={3} onClick={handleGoToHome} sx={{cursor: 'pointer'}}>
+                            <img src={'/images/logo-color-white.svg'} width={'55px'} />
                         </Box>
                         <Box
                             fontFamily={'Saira Condensed, sans-serif'}
                             fontSize={'30px'}
+                            color={'#FFF'}
                             fontWeight={600}
                             letterSpacing={'0.1px'}
                             onClick={handleGoToHome}
@@ -88,7 +89,7 @@ const Index = (props) => {
                             sx={{ cursor: "pointer" }}
                             onClick={handleToggle}
                         >
-                            <Avatar sx={{background: '#181935'}}>{localStorage.getItem('username')[0].toUpperCase()}</Avatar>
+                            <Avatar src={'https://source.unsplash.com/featured/300x202'} sx={{background: '#181935'}}>{localStorage.getItem('username')[0].toUpperCase()}</Avatar>
                             <Box
                                 bgcolor={"#cecece"}
                                 pr={1.5}
@@ -97,6 +98,7 @@ const Index = (props) => {
                                 fontSize={"13px"}
                                 borderRadius={"5px"}
                                 ml={-1}
+                                fontWeight={600}
                             >
                                 {localStorage.getItem('username')}
                             </Box>

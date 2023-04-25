@@ -1,5 +1,6 @@
 import {Avatar, Box} from "@mui/material";
 import {useEffect, useState} from "react";
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 
 const ChatCard = ({person, current, setCurrent, loading}) => {
 
@@ -49,7 +50,7 @@ const ChatCard = ({person, current, setCurrent, loading}) => {
                 sx={{
                     cursor: loading ? 'auto' : 'pointer',
                     "&:hover": {
-                        backgroundColor: current?.chatroom_id === person.chatroom_id ? '#dedede' : '#ffffff',
+                        backgroundColor: current?.chatroom_id === person.chatroom_id ? '#FFF' : '#dedede',
                         // backgroundColor: "#dedede",
                     },
                 }}
@@ -57,8 +58,11 @@ const ChatCard = ({person, current, setCurrent, loading}) => {
                     if(!loading)
                         setCurrent(person)
                 }}
-                bgcolor={current?.chatroom_id === person.chatroom_id ? '#dedede' : 'transparent'}
+                bgcolor={current?.chatroom_id === person.chatroom_id ? '#FFF' : 'transparent'}
             >
+                {
+                    current?.chatroom_id === person.chatroom_id && <ArrowRightIcon sx={{ml: -3}} />
+                }
                 <Avatar sx={{background: '#181935'}}>{username[0]?.toUpperCase()}</Avatar>
                 <Box ml={2} width={'100%'}>
                     <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>

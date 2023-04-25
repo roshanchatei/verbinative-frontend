@@ -32,7 +32,7 @@ const Index = () => {
             <Box width={'100%'}>
                 <Grid container>
                     <Grid item xs={5}>
-                        <Box bgcolor={'#F4F4F4'} width={'100%'} borderRight={'1px solid #E1E1E1'}>
+                        <Box bgcolor={'#f1f1f1'} width={'100%'} borderRight={'1px solid #E1E1E1'}>
                             <Box width={'100%'} p={2} borderBottom={'1px solid #E1E1E1'}>
                                 <SearchAutoComplete chats={chats} setChats={setChats} />
                             </Box>

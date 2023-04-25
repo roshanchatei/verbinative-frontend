@@ -57,8 +57,8 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
             .then(async (res) => {
                 const data = res?.data?.messages;
                 const total = 42; //change this from api
-                // const translatedMessages = await translateMessages(data.reverse());
-                const translatedMessages = data.reverse();
+                const translatedMessages = await translateMessages(data.reverse());
+                // const translatedMessages = data.reverse();
                 setHasMore(messageListLength + data.length < total);
                 setMessageList(prevList => {
                     return [...translatedMessages, ...prevList];
@@ -139,7 +139,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
         <>
             <Box width={'100%'} height={'calc(100vh - 48px)'} position={'relative'}>
 
-                <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} width={'100%'} py={0.5} px={3} borderBottom={'1px solid #E1E1E1'}>
+                <Box bgcolor={'#f6f6f6'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} width={'100%'} py={0.5} px={3} pt={1.2}>
                     <IconButton
                         sx={{pl: 2, py: 1.5}}
                         onClick={() => {
@@ -177,6 +177,10 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
                     sx={{
                         scrollBehavior: "smooth",
                         overflowY: "scroll",
+                        background: `url('/images/chat-bg2.jpg')`,
+                        backgroundSize: "cover",
+                        backgroundRepeat: "no-repeat",
+                        opacity: 0.9,
                     }}
                     ref={containerRef}
                 >
@@ -211,7 +215,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
 
                 </Box>
 
-                <Box bgcolor={'#FFF'} position={'absolute'} bottom={0} px={3} py={1} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} borderTop={'1px solid #E1E1E1'}>
+                <Box bgcolor={'#f6f6f6'} position={'absolute'} bottom={0} px={3} py={1} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} borderTop={'1px solid #E1E1E1'}>
                     <TextField
                         variant="standard"
                         size={'small'}

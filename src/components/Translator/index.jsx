@@ -1,10 +1,10 @@
-import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import IconButton from "@mui/material/IconButton";
 import {useState} from "react";
 import {Box, Button, Checkbox, Divider, Drawer, InputAdornment, MenuItem} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import TranslateIcon from '@mui/icons-material/Translate';
 import CustomTextField from "@/src/components/CustomTextField";
 import {languages} from "@/src/store/languages";
 import {useSnackbar} from "notistack";
@@ -62,7 +62,7 @@ const Index = () => {
     return (
         <>
             <IconButton onClick={handleMobDrawer}>
-                <ChangeCircleIcon sx={{color: 'red'}} />
+                <TranslateIcon sx={{color: '#fff'}} />
             </IconButton>
 
 
