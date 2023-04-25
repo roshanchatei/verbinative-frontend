@@ -28,6 +28,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
         setMessageListLength(0)
         setMessageList([]);
         setHasMore(true);
+        LoadMessages()
     },[current]);
 
     const translateMessages = async (temp) => {
@@ -56,7 +57,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
             .then(response => response.json())
             .then(async (res) => {
                 const data = res?.data?.messages;
-                const total = 42; //change this from api
+                const total = res?.data?.msg_len;
                 // const translatedMessages = await translateMessages(data.reverse());
                 const translatedMessages = data.reverse();
                 setHasMore(messageListLength + data.length < total);
@@ -84,6 +85,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
 
         ws.addEventListener('message', (event) => {
             const message = JSON.parse(event.data);
+            console.log(message)
 
             if(message.Type === "MESSAGE"){
                 if(message['Content'].created_by !== userId)
