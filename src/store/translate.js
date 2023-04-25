@@ -8,7 +8,7 @@ export const translate = (message, target) => {
                 Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZjM5NmE1OTktNjA5Zi00YTY0LWI3YWEtOTllNjExYjM5ZDg5IiwidHlwZSI6ImFwaV90b2tlbiJ9.4ATUxRmI9zw4wHXrGlJUjtRh8mrxEXCC8mCLmb_8_0U'
             },
             body: JSON.stringify({
-                providers: 'phedone',
+                providers: 'microsoft',
                 text: message,
                 source_language: 'auto-detect',
                 target_language: target
@@ -17,7 +17,7 @@ export const translate = (message, target) => {
     )
         .then(response => response.json())
         .then(result => {
-            return result.phedone.text;
+            return result.microsoft.text;
         })
         .catch(error => console.log('error', error));
 }

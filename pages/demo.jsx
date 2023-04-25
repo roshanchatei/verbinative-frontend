@@ -25,41 +25,93 @@ const Chat = ({current, setCurrent}) => {
     const [hasMore, setHasMore] = useState(false);
     const [message,setMessage] = useState('');
     const [messageList, setMessageList] = useState([]);
-    // const [newMessageList, setNewMessageList] = useState([]);
+    const [newMessageList, setNewMessageList] = useState([]);
 
     const [targetLanguage, setTargetLanguage] = useState(localStorage.getItem('language_id'))
 
-    // useEffect(() =>{
-    //     setMessageList([]);
-    //     setHasMore(true);
-    // },[current]);
+    useEffect(() =>{
+        setMessageList([]);
+        setHasMore(true);
+    },[current]);
 
     const [oldLoading, setOldLoading] = useState(false)
 
-    useEffect(() => {
-        let temp = current?.messages;
-        if(current?.messages){
-            const translateMessages = async () => {
-                setOldLoading(true)
-                const translated = await Promise.all(
-                    temp?.map(async message => {
-                        if (message.created_by !== userId) {
-                            const translatedText = await translate(message.text, targetLanguage);
-                            return {
-                                ...message,
-                                text: translatedText
-                            };
-                        }
-                        else return message;
-                    })
-                );
-                setMessageList([...translated]);
-                // console.log(translated, "my trans initial message")
-                setOldLoading(false)
-            };
-            translateMessages().then(res => console.log(res));
+    // useEffect(() => {
+    //     let temp = current?.messages;
+    //     if(current?.messages){
+    //         const translateMessages = async () => {
+    //             setOldLoading(true)
+    //             const translated = await Promise.all(
+    //                 temp?.map(async message => {
+    //                     if (message.created_by !== userId) {
+    //                         const translatedText = await translate(message.text, targetLanguage);
+    //                         return {
+    //                             ...message,
+    //                             text: translatedText
+    //                         };
+    //                     }
+    //                     else return message;
+    //                 })
+    //             );
+    //             setMessageList([...translated]);
+    //             // console.log(translated, "my trans initial message")
+    //             setOldLoading(false)
+    //         };
+    //         translateMessages().then(res => console.log(res));
+    //     }
+    // }, [current]);
+
+    useEffect(() =>{
+        LoadMessages();
+    },[current]);
+
+    const translateMessages = async (temp, total) => {
+        // setOldLoading(true)
+        const translated = await Promise.all(
+            temp?.map(async message => {
+                if (message.created_by !== userId) {
+                    const translatedText = await translate(message.text, targetLanguage);
+                    return {
+                        ...message,
+                        text: translatedText
+                    };
+                }
+                else return message;
+            })
+        );
+        const newList = [...messageList, ...translated];
+        setMessageList(newList);
+        setHasMore(newList.length < total);
+        // setMessageList([...translated]);
+        console.log(newList)
+        // setOldLoading(false)
+    };
+
+    const LoadMessages = () => {
+        if (current === null) {
+            setHasMore(false);
+            return false;
         }
-    }, [current]);
+
+        fetch(`http://localhost:8080/chat/${current.chatroom_id}/messages?limit=${5}&skip=${messageList.length}`)
+            .then(response => response.json())
+            .then((res) => {
+                const data = res?.data?.messages;
+                const total = res?.data?.messages.length;
+                translateMessages(data, total).then(r => console.log(r));
+                // console.log(translatedMessages)
+                // const newList = [...messageList, ...translatedMessages];
+                // setMessageList(newList);
+                // setHasMore(newList.length < total);
+            })
+            .catch((error) => {
+                enqueueSnackbar(error.message ? error.message : 'Something went wrong', {
+                    variant: 'error',
+                });
+                setHasMore(false);
+            });
+    };
+
 
     const loadMoreMessages = () => {
 
@@ -79,9 +131,9 @@ const Chat = ({current, setCurrent}) => {
             if(message.Type === "MESSAGE"){
                 if(message['Content'].created_by !== userId)
                     translate(message['Content'].text, targetLanguage)
-                    .then((translatedMessage) => {
-                        setMessageList((messages) => [...messages, {...message['Content'], text: translatedMessage}]);
-                    })
+                        .then((translatedMessage) => {
+                            setMessageList((messages) => [...messages, {...message['Content'], text: translatedMessage}]);
+                        })
                         .catch((e) => console.log(e))
                 else
                     setMessageList((messages) => [...messages, message['Content']]);

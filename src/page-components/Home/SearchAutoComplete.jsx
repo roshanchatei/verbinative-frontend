@@ -80,8 +80,6 @@ const Index = ({chats, setChats}) => {
     return (
         <>
             <Autocomplete
-                // fullWidth
-                // sx={{ width: `100%` }}
                 open={open}
                 onOpen={() => {
                     setOpen(true);
@@ -103,13 +101,13 @@ const Index = ({chats, setChats}) => {
                 }}
                 renderInput={(params) => (
                     <TextField
+                        fullWidth
                         {...params}
                         sx={{
                             background: "#FFF",
                             py: 1,
                             px: 2,
                             borderRadius: "10px",
-                            width: { lg: "500px", md: "500px", sm: "400px", xs: "100%" },
                             boxShadow: "0px 4px 31px rgba(0, 0, 0, 0.08)",
                         }}
                         variant="standard"

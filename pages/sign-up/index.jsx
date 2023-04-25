@@ -66,6 +66,25 @@ const Index = () => {
         setLoading(false)
     }
 
+    // useEffect(() => {
+    //     const translateMessages = async () => {
+    //         const translated = await Promise.all(
+    //             messageList.map(async message => {
+    //                 if (message.created_by !== userId) {
+    //                     const translatedText = await translate(message.text);
+    //                     return {
+    //                         ...message,
+    //                         text: translatedText
+    //                     };
+    //                 }
+    //                 return message;
+    //             })
+    //         );
+    //         setMessageList(translated);
+    //     };
+    //     translateMessages();
+    // }, [messageList]);
+
     return (
         <>
             <MainContainer current={current} setCurrent={setCurrent}>
