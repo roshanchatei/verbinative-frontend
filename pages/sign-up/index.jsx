@@ -49,7 +49,6 @@ const Index = () => {
         fetch("http://localhost:8080/user/signup", requestOptions)
             .then(response => response.json())
             .then(async (result) => {
-                console.log(result)
                 if (result.message === "success") {
                     await Router.push('/login')
                     enqueueSnackbar("SignUp Successful", {
@@ -65,25 +64,6 @@ const Index = () => {
 
         setLoading(false)
     }
-
-    // useEffect(() => {
-    //     const translateMessages = async () => {
-    //         const translated = await Promise.all(
-    //             messageList.map(async message => {
-    //                 if (message.created_by !== userId) {
-    //                     const translatedText = await translate(message.text);
-    //                     return {
-    //                         ...message,
-    //                         text: translatedText
-    //                     };
-    //                 }
-    //                 return message;
-    //             })
-    //         );
-    //         setMessageList(translated);
-    //     };
-    //     translateMessages();
-    // }, [messageList]);
 
     return (
         <>

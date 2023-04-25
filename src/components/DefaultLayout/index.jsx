@@ -7,11 +7,11 @@ import {useSnackbar} from "notistack";
 import {useRef, useState} from "react";
 
 //MUI Icons
-import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from "@mui/icons-material/Close";
 import {countries} from "@/src/store/countries";
 import Profile from "@/src/page-components/Home/Profile";
 import Translator from "@/src/components/Translator";
+import CreateServer from "@/src/page-components/Home/CreateServer";
 
 const Index = (props) => {
 
@@ -79,6 +79,8 @@ const Index = (props) => {
                     </Box>
                     <Box display={'flex'} alignItems={'center'}>
                         {/*<img src={getCountryFlag()} alt={'flag'} />*/}
+                        <CreateServer />
+                        <Box ml={2} />
                         <Translator />
                         <Box ml={2} />
                         <Box
@@ -89,7 +91,7 @@ const Index = (props) => {
                             sx={{ cursor: "pointer" }}
                             onClick={handleToggle}
                         >
-                            <Avatar src={'https://source.unsplash.com/featured/300x202'} sx={{background: '#181935'}}>{localStorage.getItem('username')[0].toUpperCase()}</Avatar>
+                            <Avatar src={'https://source.unsplash.com/featured/300x202'} sx={{background: '#181935'}} />
                             <Box
                                 bgcolor={"#cecece"}
                                 pr={1.5}

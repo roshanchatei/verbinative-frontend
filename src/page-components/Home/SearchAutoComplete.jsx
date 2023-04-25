@@ -5,8 +5,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import SearchIcon from "@mui/icons-material/Search";
 import { useSnackbar } from "notistack";
 import {useEffect, useState} from "react";
+import {useRouter} from "next/router";
 
-const Index = ({chats, setChats}) => {
+const Index = ({chats, setChats, type, selectedList, setSelectedList}) => {
+    const Router = useRouter();
     const { enqueueSnackbar } = useSnackbar();
 
     const [open, setOpen] = useState(false);
@@ -69,9 +71,16 @@ const Index = ({chats, setChats}) => {
         fetch("http://localhost:8080/chat/create/", requestOptions)
             .then(response => response.json())
             .then((result) => {
-                // const temp = chats.find(each => each.chatroom_id === result.data.data.chatroom_id);
-                // console.log(temp)
-                // setChats((chat) => [result?.data?.data, ...chat])
+                // const temp = {
+                //     name: "dm",
+                //     chatroom_id: result?.data?.data?.chatroom_id,
+                //     user_ids: [
+                //         localStorage.getItem('id'),
+                //         otherUser?.user_id
+                //     ],
+                // }
+                // setChats((chat) => [...chat, temp])
+                Router.reload();
             })
             .catch(error => console.log('error', error));
     }
@@ -96,8 +105,19 @@ const Index = ({chats, setChats}) => {
                     setInputValue(newInputValue);
                 }}
                 onChange={(event, newValue) => {
-                    // Router.push(`/jobs/${newValue.username}`);
-                    handleCreateServer(newValue)
+                    if(type === 'search')
+                        handleCreateServer(newValue)
+                    if(type === 'add'){
+                        setOpen(false)
+                        const isPresent = selectedList.some(obj => obj?.user_id === newValue?.user_id);
+                        if(!isPresent && newValue){
+                            setSelectedList(prevList => {
+                                return [...prevList, newValue];
+                            });
+                        }
+                        // const isPresent = arr.some(obj => Object.is(obj.id, 3));
+
+                    }
                 }}
                 renderInput={(params) => (
                     <TextField

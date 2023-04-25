@@ -4,11 +4,10 @@ import {useRouter} from "next/router";
 import CustomTextField from "../../src/components/CustomTextField";
 
 //MUI
-import {Box, Button, AppBar, CircularProgress} from "@mui/material";
+import {Box, Button} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import {useUser} from "@/src/store/UserContext";
 import MainContainer from "@/src/components/MainContainer";
 
 const Index = () => {
@@ -20,9 +19,7 @@ const Index = () => {
     const [loading,  setLoading] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [user, setUser] = useUser();
 
-    //change password visibility
     useEffect(() => {
         if(isVisible){
             setTimeout(() => {
@@ -132,7 +129,6 @@ const Index = () => {
                         zIndex: 2,
                         py: 1.5,
                         "&:hover": {
-                            // fontWeight: "600",
                             backgroundColor: "#006ff8",
                         },
                         textTransform: 'none'

@@ -5,9 +5,11 @@ import {countries} from "@/src/store/countries";
 import {languages} from "@/src/store/languages";
 import EditIcon from '@mui/icons-material/Edit';
 import {useSnackbar} from "notistack";
+import {useRouter} from "next/router";
 
 const Profile = () => {
 
+    const Router = useRouter();
     const { enqueueSnackbar } = useSnackbar();
 
     const userId = localStorage.getItem('id');
@@ -56,6 +58,7 @@ const Profile = () => {
                 enqueueSnackbar("Profile changed successfully", {
                     variant: "success",
                 });
+                Router.reload();
             })
             .catch(error => console.log('error', error))
             .finally(() => setLoading(false))
@@ -170,7 +173,6 @@ const Profile = () => {
                         zIndex: 2,
                         py: 1.5,
                         "&:hover": {
-                            // fontWeight: "600",
                             backgroundColor: "#006ff8",
                         },
                         textTransform: 'none'

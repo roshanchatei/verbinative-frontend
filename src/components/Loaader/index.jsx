@@ -14,7 +14,7 @@ const Loader = () => {
                 const diff = Math.random() * 10;
                 return Math.min(oldProgress + diff, 100);
             });
-        }, 100);
+        }, 50);
 
         return () => {
             clearInterval(timer);
@@ -35,7 +35,7 @@ const Loader = () => {
                 <img
                     alt="logo"
                     style={{ width: 200, height: "auto" }}
-                    src={"/images/logo-color.svg"}
+                    src={"/images/logo-color-blue.svg"}
                 />
                 <div style={{ width: "20%", marginTop: 15 }}>
                     <LinearProgress
