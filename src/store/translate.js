@@ -1,16 +1,16 @@
-export const translate = (message, target) => {
+export const translate = (message, source, target) => {
     return fetch(
         `https://api.edenai.run/v2/translation/automatic_translation`,
         {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZjM5NmE1OTktNjA5Zi00YTY0LWI3YWEtOTllNjExYjM5ZDg5IiwidHlwZSI6ImFwaV90b2tlbiJ9.4ATUxRmI9zw4wHXrGlJUjtRh8mrxEXCC8mCLmb_8_0U'
+                Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiOWRhYTU3NDktZGQ5Zi00OTI0LTg2MjUtNDJhYjg1ZjBhNjYyIiwidHlwZSI6ImFwaV90b2tlbiJ9.ou4xqkrq3sCJzKU5tErRyhZi5ht7rYurrhFjbqGUxHM'
             },
             body: JSON.stringify({
                 providers: 'microsoft',
                 text: message,
-                source_language: 'auto-detect',
+                source_language: source,
                 target_language: target
             })
         }

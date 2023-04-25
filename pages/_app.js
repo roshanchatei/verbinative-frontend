@@ -25,11 +25,11 @@ export default function App({ Component, pageProps }) {
 
     if(token){
       //rest of the code
-      if (Router.pathname === "/login" || Router.pathname === "/sign-up") Router.push("/").then((e) => console.log(e));
+      if (Router.pathname === "/login" || Router.pathname === "/sign-up") Router.push("/")
       // setLoading(false);
     }
     else{
-      if (Router.pathname !== "/sign-up") Router.push("/login").then((e) => console.log(e));
+      if (Router.pathname !== "/sign-up") Router.push("/login");
       // setLoading(false);
     }
 

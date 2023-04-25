@@ -9,6 +9,7 @@ const Index = () => {
     const [chats, setChats] = useState([])
 
     const [current, setCurrent] = useState(null)
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const requestOptions = {
@@ -47,11 +48,12 @@ const Index = () => {
                                 }}
                             >
                                 {
-                                    chats?.map((each) => (
+                                    chats?.map((each, index) => (
                                         <ChatCard
-                                            key={each.id} person={each}
+                                            key={index} person={each}
                                             current={current}
                                             setCurrent={setCurrent}
+                                            loading={loading}
                                         />
                                     ))
                                 }
@@ -64,6 +66,8 @@ const Index = () => {
                                 <Chat
                                     current={current}
                                     setCurrent={setCurrent}
+                                    loading={loading}
+                                    setLoading={setLoading}
                                 />
                             ) : (
                                 <Box display={'flex'} alignItems={'center'} justifyContent={'center'} width={'100%'} height={'calc(100vh - 48px)'}>

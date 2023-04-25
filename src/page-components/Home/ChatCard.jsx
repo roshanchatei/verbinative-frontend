@@ -1,7 +1,7 @@
 import {Avatar, Box} from "@mui/material";
 import {useEffect, useState} from "react";
 
-const ChatCard = ({person, current, setCurrent}) => {
+const ChatCard = ({person, current, setCurrent, loading}) => {
 
     const [username, setUsername] = useState('')
 
@@ -47,14 +47,15 @@ const ChatCard = ({person, current, setCurrent}) => {
                 px={3} py={2}
                 display={'flex'} alignItems={'center'}
                 sx={{
-                    cursor: 'pointer',
+                    cursor: loading ? 'auto' : 'pointer',
                     "&:hover": {
                         backgroundColor: current?.chatroom_id === person.chatroom_id ? '#dedede' : '#ffffff',
                         // backgroundColor: "#dedede",
                     },
                 }}
                 onClick={() => {
-                    setCurrent(person)
+                    if(!loading)
+                        setCurrent(person)
                 }}
                 bgcolor={current?.chatroom_id === person.chatroom_id ? '#dedede' : 'transparent'}
             >

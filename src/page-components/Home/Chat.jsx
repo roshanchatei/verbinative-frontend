@@ -1,12 +1,4 @@
-import {
-    Avatar,
-    Box,
-    CircularProgress,
-    IconButton,
-    InputAdornment, MenuItem,
-    Select,
-    TextField
-} from "@mui/material";
+import {Box, CircularProgress, IconButton, InputAdornment, TextField} from "@mui/material";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import SearchIcon from '@mui/icons-material/Search';
 import SendIcon from '@mui/icons-material/Send';
@@ -16,13 +8,14 @@ import InfiniteScroll from "react-infinite-scroller";
 import {useSnackbar} from "notistack";
 import {translate} from "@/src/store/translate";
 
-const Chat = ({current, setCurrent}) => {
+const Chat = ({current, setCurrent, loading, setLoading}) => {
 
     const { enqueueSnackbar } = useSnackbar();
+    const containerRef = useRef(null);
+
     const userId = localStorage.getItem('id');
     const username = localStorage.getItem('username');
 
-    const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(false);
     const [message,setMessage] = useState('');
     const [messageList, setMessageList] = useState([]);
@@ -38,21 +31,17 @@ const Chat = ({current, setCurrent}) => {
     },[current]);
 
     const translateMessages = async (temp) => {
-        // setOldLoading(true)
-        const translated = await Promise.all(
+        return await Promise.all(
             temp?.map(async message => {
                 if (message.created_by !== userId) {
-                    const translatedText = await translate(message.text, targetLanguage);
+                    const translatedText = await translate(message.text, 'auto-detect', targetLanguage);
                     return {
                         ...message,
                         text: translatedText
                     };
-                }
-                else return message;
+                } else return message;
             })
         );
-
-        return translated;
     };
 
     const LoadMessages = () => {
@@ -61,13 +50,15 @@ const Chat = ({current, setCurrent}) => {
             return;
         }
 
+        setLoading(true)
 
         fetch(`http://localhost:8080/chat/${current.chatroom_id}/messages?limit=${10}&skip=${messageListLength}`)
             .then(response => response.json())
             .then(async (res) => {
                 const data = res?.data?.messages;
                 const total = 42; //change this from api
-                const translatedMessages = await translateMessages(data.reverse());
+                // const translatedMessages = await translateMessages(data.reverse());
+                const translatedMessages = data.reverse();
                 setHasMore(messageListLength + data.length < total);
                 setMessageList(prevList => {
                     return [...translatedMessages, ...prevList];
@@ -80,6 +71,7 @@ const Chat = ({current, setCurrent}) => {
                 });
                 setHasMore(false);
             })
+            .finally(() => setLoading(false))
     };
 
     useEffect(() => {
@@ -136,11 +128,17 @@ const Chat = ({current, setCurrent}) => {
         };
     };
 
+    useEffect(() => {
+        if (!loading) {
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+    }, [loading]);
 
 
     return (
         <>
             <Box width={'100%'} height={'calc(100vh - 48px)'} position={'relative'}>
+
                 <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} width={'100%'} py={0.5} px={3} borderBottom={'1px solid #E1E1E1'}>
                     <IconButton
                         sx={{pl: 2, py: 1.5}}
@@ -156,6 +154,20 @@ const Chat = ({current, setCurrent}) => {
                         }
                     </Box>
                 </Box>
+                {/*{*/}
+                {/*    loading && (*/}
+                {/*        <Box*/}
+                {/*            zIndex={10}*/}
+                {/*            position={'absolute'} width={'100%'} height={'100%'}*/}
+                {/*            sx={{*/}
+                {/*                backdropFilter: "blur(3px)",*/}
+                {/*                backgroundColor: "rgba(0, 0, 0, 0.81)",*/}
+                {/*            }}*/}
+                {/*        >*/}
+
+                {/*        </Box>*/}
+                {/*    )*/}
+                {/*}*/}
                 <Box
                     height={'calc(100vh - 169px)'}
                     position={'absolute'} bottom={60}
@@ -166,6 +178,7 @@ const Chat = ({current, setCurrent}) => {
                         scrollBehavior: "smooth",
                         overflowY: "scroll",
                     }}
+                    ref={containerRef}
                 >
 
                     <InfiniteScroll
