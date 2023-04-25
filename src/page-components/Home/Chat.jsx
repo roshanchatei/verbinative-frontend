@@ -20,23 +20,19 @@ const Chat = ({current, setCurrent}) => {
 
     const { enqueueSnackbar } = useSnackbar();
     const userId = localStorage.getItem('id');
+    const username = localStorage.getItem('username');
 
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(false);
     const [message,setMessage] = useState('');
     const [messageList, setMessageList] = useState([]);
-    const [newMessageList, setNewMessageList] = useState([]);
-
-    const messageListLength = useRef(messageList.length);
+    const [messageListLength, setMessageListLength] = useState(0);
 
 
     const [targetLanguage, setTargetLanguage] = useState(localStorage.getItem('language_id'))
 
-
-    const [oldLoading, setOldLoading] = useState(false)
-
-
     useEffect(() =>{
+        setMessageListLength(0)
         setMessageList([]);
         setHasMore(true);
     },[current]);
@@ -64,22 +60,19 @@ const Chat = ({current, setCurrent}) => {
             setHasMore(false);
             return;
         }
-        // setOldLoading(true)
 
 
-        fetch(`http://localhost:8080/chat/${current.chatroom_id}/messages?limit=${5}&skip=${messageListLength.current}`)
+        fetch(`http://localhost:8080/chat/${current.chatroom_id}/messages?limit=${10}&skip=${messageListLength}`)
             .then(response => response.json())
             .then(async (res) => {
                 const data = res?.data?.messages;
-                // const total = res?.data?.messages.length;
-                const total = 40;
+                const total = 42; //change this from api
                 const translatedMessages = await translateMessages(data.reverse());
-                console.log(translatedMessages)
-                setHasMore(messageListLength.current + data.length < total);
+                setHasMore(messageListLength + data.length < total);
                 setMessageList(prevList => {
-                    messageListLength.current = prevList.length + translatedMessages.length;
                     return [...translatedMessages, ...prevList];
                 });
+                setMessageListLength(prev => prev + data.length)
             })
             .catch((error) => {
                 enqueueSnackbar(error.message ? error.message : 'Something went wrong', {
@@ -87,7 +80,6 @@ const Chat = ({current, setCurrent}) => {
                 });
                 setHasMore(false);
             })
-            // .finally(() => setOldLoading(false))
     };
 
     useEffect(() => {
@@ -130,7 +122,8 @@ const Chat = ({current, setCurrent}) => {
             Type: "MESSAGE",
             Content: {
                 Text: message,
-                Created_by: userId
+                Created_by: userId,
+                Username: username,
             }
         };
         const ws = new WebSocket(`ws://localhost:8080/ws/chat/${current?.chatroom_id}`);
@@ -147,130 +140,100 @@ const Chat = ({current, setCurrent}) => {
 
     return (
         <>
-            {
-                oldLoading ? (
-                    <Box display={'flex'} alignItems={'center'} justifyContent={'center'} width={'100%'} height={'calc(100vh - 48px)'}>
-                        <CircularProgress size={28} />
+            <Box width={'100%'} height={'calc(100vh - 48px)'} position={'relative'}>
+                <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} width={'100%'} py={0.5} px={3} borderBottom={'1px solid #E1E1E1'}>
+                    <IconButton
+                        sx={{pl: 2, py: 1.5}}
+                        onClick={() => {
+                            setCurrent(null)
+                        }}
+                    >
+                        <ArrowBackIosIcon />
+                    </IconButton>
+                    <Box fontWeight={500} fontSize={'20px'}>
+                        {
+                            current?.name
+                        }
                     </Box>
-                ) : (
-                    <Box width={'100%'} height={'calc(100vh - 48px)'} position={'relative'}>
-                        <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} width={'100%'} py={0.5} px={3} borderBottom={'1px solid #E1E1E1'}>
-                            <IconButton
-                                sx={{pl: 2, py: 1.5}}
-                                onClick={() => {
-                                    setCurrent(null)
-                                }}
-                            >
-                                <ArrowBackIosIcon />
-                            </IconButton>
-                            <Box fontWeight={500} fontSize={'20px'}>
-                                {
-                                    current?.name
-                                }
+                </Box>
+                <Box
+                    height={'calc(100vh - 169px)'}
+                    position={'absolute'} bottom={60}
+                    width={'100%'}
+                    display={'flex'} flexDirection={'column-reverse'}
+                    py={2} px={3}
+                    sx={{
+                        scrollBehavior: "smooth",
+                        overflowY: "scroll",
+                    }}
+                >
+
+                    <InfiniteScroll
+                        hasMore={hasMore}
+                        isReverse={true}
+                        // loadMore={loadMoreMessages}
+                        loadMore={LoadMessages}
+                        loader={
+                            <Box align={'center'} key={'all-messages'} p={2}>
+                                <CircularProgress size={28} />
                             </Box>
-                            {/*<Select*/}
-                            {/*    size={'small'}*/}
-                            {/*    value={targetLanguage}*/}
-                            {/*    onChange={(event) => {*/}
-                            {/*        setTargetLanguage(event.target.value)*/}
-                            {/*    }}*/}
-                            {/*>*/}
-
-                            {/*    {*/}
-                            {/*        languages.map((each, index) => (*/}
-                            {/*            <MenuItem key={each.value} value={each.value}>{each.name}</MenuItem>*/}
-                            {/*        ))*/}
-                            {/*    }*/}
-                            {/*</Select>*/}
-                        </Box>
-                        <Box
-                            height={'calc(100vh - 169px)'}
-                            position={'absolute'} bottom={60}
-                            width={'100%'}
-                            display={'flex'} flexDirection={'column-reverse'}
-                            py={2} px={3}
-                            sx={{
-                                scrollBehavior: "smooth",
-                                overflowY: "scroll",
-                            }}
-                        >
-
-                            <InfiniteScroll
-                                hasMore={hasMore}
-                                isReverse={true}
-                                // loadMore={loadMoreMessages}
-                                loadMore={LoadMessages}
-                                loader={
-                                    <Box align={'center'} key={'all-messages'} p={2}>
-                                        <CircularProgress size={28} />
-                                    </Box>
-                                }
-                                pageStart={0}
-                            >
-                                {
-                                    messageList?.length > 0 && (
-                                        <>
-                                            {
-                                                messageList.map((each, index) =>(
-                                                    <ChatContainer
-                                                        key={index}
-                                                        each={each}
-                                                    />
-                                                ))
-                                            }
-                                        </>
-                                    )
-                                }
-                                {/*<ChatContainer*/}
-                                {/*    type={1}*/}
-                                {/*    msg={'hello, i am the sender'}*/}
-                                {/*/>*/}
-                                {/*<ChatContainer*/}
-                                {/*    type={-1}*/}
-                                {/*    msg={'hello, i am the reciever'}*/}
-                                {/*/>*/}
-                            </InfiniteScroll>
-
-                        </Box>
-
-                        <Box bgcolor={'#FFF'} position={'absolute'} bottom={0} px={3} py={1} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} borderTop={'1px solid #E1E1E1'}>
-                            <TextField
-                                variant="standard"
-                                size={'small'}
-                                sx={{
-                                    background: "#FFF",
-                                    py: 1,
-                                    px: 2,
-                                    borderRadius: "40px",
-                                    width: "90%",
-                                    border: '1px solid #000'
-                                }}
-                                InputProps={{
-                                    startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment>,
-                                    disableUnderline: true,
-                                }}
-                                value={message}
-                                onChange={(event) => {
-                                    setMessage(event.target.value)
-                                }}
-                                onKeyDown={(event) => {
-                                    if (event.key === 'Enter') {
-                                        handleSendMessage();
-                                        event.preventDefault();
+                        }
+                        pageStart={0}
+                    >
+                        {
+                            messageList?.length > 0 && (
+                                <>
+                                    {
+                                        messageList.map((each, index) =>(
+                                            <ChatContainer
+                                                key={index}
+                                                each={each}
+                                            />
+                                        ))
                                     }
-                                }}
-                            />
-                            <IconButton
-                                onClick={handleSendMessage}
-                                disabled={message === ''}
-                            >
-                                <SendIcon />
-                            </IconButton>
-                        </Box>
+                                </>
+                            )
+                        }
+                    </InfiniteScroll>
 
-                    </Box>
-                )
-            }
+                </Box>
+
+                <Box bgcolor={'#FFF'} position={'absolute'} bottom={0} px={3} py={1} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} borderTop={'1px solid #E1E1E1'}>
+                    <TextField
+                        variant="standard"
+                        size={'small'}
+                        sx={{
+                            background: "#FFF",
+                            py: 1,
+                            px: 2,
+                            borderRadius: "40px",
+                            width: "90%",
+                            border: '1px solid #000'
+                        }}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start"><SearchIcon /></InputAdornment>,
+                            disableUnderline: true,
+                        }}
+                        value={message}
+                        onChange={(event) => {
+                            setMessage(event.target.value)
+                        }}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter') {
+                                handleSendMessage();
+                                event.preventDefault();
+                            }
+                        }}
+                    />
+                    <IconButton
+                        onClick={handleSendMessage}
+                        disabled={message === ''}
+                    >
+                        <SendIcon />
+                    </IconButton>
+                </Box>
+
+            </Box>
         </>
     );
 };

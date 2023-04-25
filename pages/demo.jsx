@@ -124,6 +124,21 @@ const Chat = ({current, setCurrent}) => {
 
     }
 
+    {/*<Select*/}
+    {/*    size={'small'}*/}
+    {/*    value={targetLanguage}*/}
+    {/*    onChange={(event) => {*/}
+    {/*        setTargetLanguage(event.target.value)*/}
+    {/*    }}*/}
+    {/*>*/}
+
+    {/*    {*/}
+    {/*        languages.map((each, index) => (*/}
+    {/*            <MenuItem key={each.value} value={each.value}>{each.name}</MenuItem>*/}
+    {/*        ))*/}
+    {/*    }*/}
+    {/*</Select>*/}
+
 
     return (
         <>
