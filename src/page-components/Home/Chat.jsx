@@ -62,8 +62,8 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
             .then(async (res) => {
                 const data = res?.data?.messages;
                 const total = res?.data?.msg_len;
-                // const translatedMessages = await translateMessages(data.reverse());
-                const translatedMessages = data.reverse();
+                const translatedMessages = await translateMessages(data.reverse());
+                // const translatedMessages = data.reverse();
                 setHasMore(messageListLength + data.length < total);
                 setMessageList(prevList => {
                     return [...translatedMessages, ...prevList];
