@@ -8,9 +8,11 @@ import {useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
 import SearchAutoComplete from "@/src/page-components/Home/SearchAutoComplete";
 import {baseURL} from "@/src/store/config";
+import {useRouter} from "next/router";
 
 const Index = ({current, loading}) => {
 
+    const Router = useRouter();
     const { enqueueSnackbar } = useSnackbar();
 
     const drawerWidth = 500;
@@ -71,24 +73,28 @@ const Index = ({current, loading}) => {
         const allUserIds = [...current?.user_ids, ...userIds];
         const uniqueArr = [...new Set(allUserIds)];
 
+        const raw = JSON.stringify({
+            "user_ids": uniqueArr,
+        });
+
         const requestOptions = {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
             },
-            body: uniqueArr,
+            body: raw,
             redirect: 'follow'
         };
 
-        // fetch(`${baseURL}/chat/join/${current?.chatroom_id}/`, requestOptions)
-        //     .then(response => response.json())
-        //     .then((res) => {
-        //         enqueueSnackbar(`Successfully added ${selectedList?.length} participants`, {
-        //             variant: "success",
-        //         });
-        //         // Router.reload();
-        //     })
-        //     .catch(error => console.log('error', error));
+        fetch(`${baseURL}/chat/join/${current?.chatroom_id}/`, requestOptions)
+            .then(response => response.json())
+            .then((res) => {
+                enqueueSnackbar(`Successfully added ${selectedList?.length} participants`, {
+                    variant: "success",
+                });
+                Router.reload();
+            })
+            .catch(error => console.log('error', error));
     }
 
     return (

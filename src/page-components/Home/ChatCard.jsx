@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import {getTimeOrDate} from "@/src/store/getTimeOrDate";
 import GroupIcon from '@mui/icons-material/Group';
+import PersonIcon from '@mui/icons-material/Person';
 import {baseURL} from "@/src/store/config";
 
 const ChatCard = ({person, current, setCurrent, loading}) => {
@@ -45,15 +46,11 @@ const ChatCard = ({person, current, setCurrent, loading}) => {
                 {
                     current?.chatroom_id === person.chatroom_id && <ArrowRightIcon sx={{ml: -3}} />
                 }
-                {
-                    isServer ? (
-                        <Avatar sx={{backgroundColor: '#131348'}}>
-                            <GroupIcon />
-                        </Avatar>
-                    ) : (
-                        <Avatar sx={{backgroundColor: '#181935'}}>{username[0]?.toUpperCase()}</Avatar>
-                    )
-                }
+                <Avatar sx={{backgroundColor: '#131348'}}>
+                    {
+                        isServer ? <GroupIcon /> : <PersonIcon />
+                    }
+                </Avatar>
                 <Box ml={2} width={'100%'}>
                     <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
                         <Box fontWeight={500} fontSize={'18px'} fontStyle={'italic'}>
