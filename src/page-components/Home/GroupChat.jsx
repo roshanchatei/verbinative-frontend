@@ -1,12 +1,13 @@
 import InfoIcon from '@mui/icons-material/Info';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import {Avatar, Box, Button, Chip, Divider, Drawer, Grid, IconButton} from "@mui/material";
+import {Avatar, Box, Button, Chip, CircularProgress, Divider, Drawer, Grid, IconButton} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import GroupIcon from '@mui/icons-material/Group';
 import LinkIcon from '@mui/icons-material/Link';
 import {useEffect, useState} from "react";
 import {useSnackbar} from "notistack";
 import SearchAutoComplete from "@/src/page-components/Home/SearchAutoComplete";
+import {baseURL} from "@/src/store/config";
 
 const Index = ({current, loading}) => {
 
@@ -30,23 +31,29 @@ const Index = ({current, loading}) => {
         return false;
     };
 
+    const [detailLoading, setDetailLoading] = useState(false)
     const [usersDetails, setUsersDetails] = useState([]);
 
     async function getUsersDetails(users_ids) {
+        setDetailLoading(true)
+
         const userDetailsArr = [];
         for (const userId of users_ids) {
             try {
-                const response = await fetch(`http://localhost:8080/user/${userId}`);
+                const response = await fetch(`${baseURL}/user/${userId}`);
                 const result = await response.json();
                 userDetailsArr.push(result?.data?.data);
             } catch (error) {
                 console.log('Error fetching user details: ', error);
+            } finally {
+                setDetailLoading(false)
             }
         }
         return userDetailsArr;
     }
 
     useEffect(() => {
+        // setUsersDetails([]);
         if(infoOpen){
             async function fetchData() {
                 const result = await getUsersDetails(current?.user_ids);
@@ -73,7 +80,7 @@ const Index = ({current, loading}) => {
             redirect: 'follow'
         };
 
-        // fetch(`http://localhost:8080/chat/join/${current?.chatroom_id}/`, requestOptions)
+        // fetch(`${baseURL}/chat/join/${current?.chatroom_id}/`, requestOptions)
         //     .then(response => response.json())
         //     .then((res) => {
         //         enqueueSnackbar(`Successfully added ${selectedList?.length} participants`, {
@@ -158,17 +165,27 @@ const Index = ({current, loading}) => {
                             }}
                         >
                             {
-                                usersDetails.map((each, index) => (
+                                detailLoading ? (
+                                    <Box height={'280px'} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                                        <CircularProgress size={28} />
+                                    </Box>
+                                ) : (
                                     <>
-                                        <Box key={index} mb={1} mt={1} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} fontSize={'16px'}>
-                                            <Box>~{each?.username}</Box>
-                                            <Box>{each?.region}</Box>
-                                        </Box>
                                         {
-                                            index !== usersDetails?.length - 1 && <Divider />
+                                            usersDetails.map((each, index) => (
+                                                <>
+                                                    <Box key={index} mb={1} mt={1} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} fontSize={'16px'}>
+                                                        <Box>~{each?.username}</Box>
+                                                        <Box>{each?.region}</Box>
+                                                    </Box>
+                                                    {
+                                                        index !== usersDetails?.length - 1 && <Divider />
+                                                    }
+                                                </>
+                                            ))
                                         }
                                     </>
-                                ))
+                                )
                             }
                         </Box>
 

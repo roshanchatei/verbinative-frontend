@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import {getTimeOrDate} from "@/src/store/getTimeOrDate";
 import GroupIcon from '@mui/icons-material/Group';
+import {baseURL} from "@/src/store/config";
 
 const ChatCard = ({person, current, setCurrent, loading}) => {
 
@@ -13,7 +14,7 @@ const ChatCard = ({person, current, setCurrent, loading}) => {
         if(person?.user_ids.length === 2){
             const myUserId = localStorage.getItem('id');
             const temp = person?.user_ids.find((each) => each !== myUserId)
-            fetch(`http://localhost:8080/user/${temp}`)
+            fetch(`${baseURL}/user/${temp}`)
                 .then(response => response.json())
                 .then(result => setUsername(result?.data?.data?.username))
                 .catch(error => console.log('error', error));

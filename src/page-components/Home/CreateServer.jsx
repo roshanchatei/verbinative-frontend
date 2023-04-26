@@ -7,6 +7,7 @@ import SearchAutoComplete from "@/src/page-components/Home/SearchAutoComplete";
 import CustomTextField from "@/src/components/CustomTextField";
 import {useEffect} from "react";
 import {useRouter} from "next/router";
+import {baseURL} from "@/src/store/config";
 
 const Index = () => {
 
@@ -21,7 +22,7 @@ const Index = () => {
     };
 
     useEffect(() => {
-        fetch(`http://localhost:8080/user/${myUserId}`)
+        fetch(`${baseURL}/user/${myUserId}`)
             .then(response => response.json())
             .then(result => setSelectedList([result?.data?.data]))
             .catch(error => console.log('error', error));
@@ -47,7 +48,7 @@ const Index = () => {
             redirect: 'follow'
         };
 
-        fetch("http://localhost:8080/chat/create/", requestOptions)
+        fetch(`${baseURL}/chat/create/`, requestOptions)
             .then(response => response.json())
             .then((res) => {
                 enqueueSnackbar(`Created group ${name}`, {

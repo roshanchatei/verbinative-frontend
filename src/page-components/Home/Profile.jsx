@@ -6,6 +6,7 @@ import {languages} from "@/src/store/languages";
 import EditIcon from '@mui/icons-material/Edit';
 import {useSnackbar} from "notistack";
 import {useRouter} from "next/router";
+import {baseURL} from "@/src/store/config";
 
 const Profile = () => {
 
@@ -45,7 +46,7 @@ const Profile = () => {
             redirect: 'follow'
         };
 
-        fetch(`http://localhost:8080/user/${userId}/`, requestOptions)
+        fetch(`${baseURL}/user/${userId}/`, requestOptions)
             .then(response => response.json())
             .then(res =>{
                 localStorage.setItem("token", res.data.data.token);

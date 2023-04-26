@@ -8,6 +8,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import {useSnackbar} from "notistack";
 import {translate} from "@/src/store/translate";
 import GroupChat from "@/src/page-components/Home/GroupChat";
+import {baseURL} from "@/src/store/config";
 
 const Chat = ({current, setCurrent, loading, setLoading}) => {
 
@@ -56,7 +57,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
             return;
         setLoading(true)
 
-        fetch(`http://localhost:8080/chat/${current.chatroom_id}/messages?limit=${10}&skip=${messageListLength}`)
+        fetch(`${baseURL}/chat/${current.chatroom_id}/messages?limit=${10}&skip=${messageListLength}`)
             .then(response => response.json())
             .then(async (res) => {
                 const data = res?.data?.messages;
@@ -80,7 +81,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
 
     useEffect(() => {
 
-        const ws = new WebSocket(`ws://localhost:8080/ws/chat/${current?.chatroom_id}`);
+        const ws = new WebSocket(`ws://54.211.136.163:8080/ws/chat/${current?.chatroom_id}`);
 
         ws.addEventListener('open', () => {
             console.log('connected');
@@ -122,7 +123,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
                 Username: username,
             }
         };
-        const ws = new WebSocket(`ws://localhost:8080/ws/chat/${current?.chatroom_id}`);
+        const ws = new WebSocket(`ws://54.211.136.163:8080/ws/chat/${current?.chatroom_id}`);
 
         ws.onopen = () => {
             if (ws.readyState === WebSocket.OPEN) {

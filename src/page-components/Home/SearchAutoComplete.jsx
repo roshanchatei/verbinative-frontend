@@ -6,6 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useSnackbar } from "notistack";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
+import {baseURL} from "@/src/store/config";
 
 const Index = ({chats, setChats, type, selectedList, setSelectedList}) => {
     const Router = useRouter();
@@ -21,7 +22,7 @@ const Index = ({chats, setChats, type, selectedList, setSelectedList}) => {
         if (inputValue) {
             setLoading(true);
             (async () => {
-                await fetch(`http://localhost:8080/user/search?username=${inputValue}`)
+                await fetch(`${baseURL}/user/search?username=${inputValue}`)
                     .then(res => res.json())
                     .then((response) => {
                         if(response.message === "success" && response?.data?.data !== null)
@@ -68,7 +69,7 @@ const Index = ({chats, setChats, type, selectedList, setSelectedList}) => {
             redirect: 'follow'
         };
 
-        fetch("http://localhost:8080/chat/create/", requestOptions)
+        fetch(`${baseURL}/chat/create/`, requestOptions)
             .then(response => response.json())
             .then((result) => {
                 // const temp = {

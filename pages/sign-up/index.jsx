@@ -6,6 +6,7 @@ import EmailPassword from "@/src/page-components/SignUp/EmailPassword";
 import BasicDetails from "@/src/page-components/SignUp/BasicDetails";
 import {useRouter} from "next/router";
 import {useSnackbar} from "notistack";
+import {baseURL} from "@/src/store/config";
 
 const Index = () => {
 
@@ -46,7 +47,7 @@ const Index = () => {
             redirect: 'follow'
         };
 
-        fetch("http://localhost:8080/user/signup", requestOptions)
+        fetch(`${baseURL}/user/signup`, requestOptions)
             .then(response => response.json())
             .then(async (result) => {
                 if (result.message === "success") {

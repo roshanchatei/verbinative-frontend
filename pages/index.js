@@ -3,6 +3,7 @@ import ChatCard from "@/src/page-components/Home/ChatCard";
 import {useState, useEffect} from "react";
 import Chat from "@/src/page-components/Home/Chat";
 import SearchAutoComplete from "@/src/page-components/Home/SearchAutoComplete";
+import {baseURL} from "@/src/store/config";
 
 const Index = () => {
 
@@ -19,10 +20,10 @@ const Index = () => {
 
         const user_id = localStorage.getItem('id')
 
-        fetch(`http://localhost:8080/chat/user/${user_id}/`, requestOptions)
+        fetch(`${baseURL}/chat/user/${user_id}/`, requestOptions)
             .then(response => response.json())
             .then(result => {
-                setChats(result?.data?.chatroom)
+                setChats(result?.data?.chatroom.reverse())
             })
             .catch(error => console.log('error', error));
     }, [])

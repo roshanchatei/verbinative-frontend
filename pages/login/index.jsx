@@ -9,6 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import MainContainer from "@/src/components/MainContainer";
+import {baseURL} from "@/src/store/config";
 
 const Index = () => {
 
@@ -43,7 +44,7 @@ const Index = () => {
             mode: 'cors'
         }
 
-        const response = await fetch("http://localhost:8080/user/login", options);
+        const response = await fetch(`${baseURL}/user/login`, options);
         return response.json();
     };
 
