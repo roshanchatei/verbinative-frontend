@@ -49,6 +49,16 @@ const Index = () => {
                                 }}
                             >
                                 {
+                                    chats?.length === 0 && (
+                                        <Box width={'100%'} height={'100%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                                            <Box mt={-9} px={3} textAlign={'center'}>
+                                                Create Chatroom or search user and start chat
+                                            </Box>
+                                        </Box>
+                                    )
+                                }
+
+                                {
                                     chats?.map((each, index) => (
                                         <ChatCard
                                             key={index} person={each}

@@ -18,13 +18,13 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
     const userId = localStorage.getItem('id');
     const username = localStorage.getItem('username');
 
-    const [isServer, setIsServer] = useState(current?.user_ids.length > 2)
+    const [isServer, setIsServer] = useState(false)
 
     const [hasMore, setHasMore] = useState(false);
     const [message,setMessage] = useState('');
     const [messageList, setMessageList] = useState([]);
     const [messageListLength, setMessageListLength] = useState(0);
-
+    const [totalMessageLength, setTotalMessageLength] = useState(null)
 
     const [targetLanguage, setTargetLanguage] = useState(localStorage.getItem('language_id'))
 
@@ -32,6 +32,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
         setMessageListLength(0)
         setMessageList([]);
         setHasMore(true);
+        setIsServer(current?.user_ids.length > 2)
     },[current]);
 
     const translateMessages = async (temp) => {
@@ -62,6 +63,10 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
             .then(async (res) => {
                 const data = res?.data?.messages;
                 const total = res?.data?.msg_len;
+
+                if(totalMessageLength === null)
+                    setTotalMessageLength(total)
+
                 const translatedMessages = await translateMessages(data.reverse());
                 // const translatedMessages = data.reverse();
                 setHasMore(messageListLength + data.length < total);
@@ -166,20 +171,26 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
                         )
                     }
                 </Box>
-                {/*{*/}
-                {/*    loading && (*/}
-                {/*        <Box*/}
-                {/*            zIndex={10}*/}
-                {/*            position={'absolute'} width={'100%'} height={'100%'}*/}
-                {/*            sx={{*/}
-                {/*                backdropFilter: "blur(3px)",*/}
-                {/*                backgroundColor: "rgba(0, 0, 0, 0.81)",*/}
-                {/*            }}*/}
-                {/*        >*/}
-
-                {/*        </Box>*/}
-                {/*    )*/}
-                {/*}*/}
+                {
+                    loading && (
+                        <Box
+                            zIndex={10}
+                            position={'absolute'} width={'100%'}
+                            height={'calc(100vh - 169px)'}
+                            display={'flex'} alignItems={'center'} justifyContent={'center'}
+                            sx={{
+                                backdropFilter: "blur(2px)",
+                                backgroundColor: "rgba(193,193,193,0.22)",
+                            }}
+                        >
+                            <CircularProgress
+                                variant="determinate"
+                                color={'accent'}
+                                value={(messageListLength / totalMessageLength || 0) * 100}
+                            />
+                        </Box>
+                    )
+                }
                 <Box
                     height={'calc(100vh - 169px)'}
                     position={'absolute'} bottom={60}
@@ -199,13 +210,12 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
                     <InfiniteScroll
                         hasMore={hasMore}
                         isReverse={true}
-                        // loadMore={loadMoreMessages}
                         loadMore={LoadMessages}
-                        loader={
-                            <Box align={'center'} key={'all-messages'} p={2}>
-                                <CircularProgress size={28} />
-                            </Box>
-                        }
+                        // loader={
+                        //     <Box align={'center'} key={'all-messages'} p={2}>
+                        //         <CircularProgress size={28} />
+                        //     </Box>
+                        // }
                         pageStart={0}
                     >
                         {

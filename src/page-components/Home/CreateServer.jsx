@@ -164,7 +164,7 @@ const Index = () => {
                                 textTransform: 'none'
                             }}
                         >
-                            Add
+                            Create
                         </Button>
                     </Box>
                 </Box>
