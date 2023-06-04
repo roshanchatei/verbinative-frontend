@@ -4,6 +4,7 @@ import {useState, useEffect} from "react";
 import Chat from "@/src/page-components/Home/Chat";
 import SearchAutoComplete from "@/src/page-components/Home/SearchAutoComplete";
 import {baseURL} from "@/src/store/config";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const Index = () => {
 
@@ -12,7 +13,11 @@ const Index = () => {
     const [current, setCurrent] = useState(null)
     const [loading, setLoading] = useState(false);
 
+    const [chatsLoading, setChatsLoading] = useState(false)
+
     useEffect(() => {
+        setChatsLoading(true);
+
         const requestOptions = {
             method: 'GET',
             redirect: 'follow'
@@ -25,7 +30,8 @@ const Index = () => {
             .then(result => {
                 setChats(result?.data?.chatroom.reverse())
             })
-            .catch(error => console.log('error', error));
+            .catch(error => console.log('error', error))
+            .finally(() => setChatsLoading(false))
     }, [])
 
     return (
@@ -49,24 +55,35 @@ const Index = () => {
                                 }}
                             >
                                 {
-                                    chats?.length === 0 && (
+                                    chatsLoading ? (
                                         <Box width={'100%'} height={'100%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
                                             <Box mt={-9} px={3} textAlign={'center'}>
-                                                Create Chatroom or search user and start chat
+                                                <CircularProgress size={28} />
                                             </Box>
                                         </Box>
+                                    ) : (
+                                        <>
+                                            {
+                                                chats?.length === 0 && (
+                                                    <Box width={'100%'} height={'100%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                                                        <Box mt={-9} px={3} textAlign={'center'}>
+                                                            Create Chatroom or search user and start chat
+                                                        </Box>
+                                                    </Box>
+                                                )
+                                            }
+                                            {
+                                                chats?.map((each, index) => (
+                                                    <ChatCard
+                                                        key={index} person={each}
+                                                        current={current}
+                                                        setCurrent={setCurrent}
+                                                        loading={loading}
+                                                    />
+                                                ))
+                                            }
+                                        </>
                                     )
-                                }
-
-                                {
-                                    chats?.map((each, index) => (
-                                        <ChatCard
-                                            key={index} person={each}
-                                            current={current}
-                                            setCurrent={setCurrent}
-                                            loading={loading}
-                                        />
-                                    ))
                                 }
                             </Box>
                         </Box>
