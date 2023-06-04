@@ -8,7 +8,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import {useSnackbar} from "notistack";
 import {translate} from "@/src/store/translate";
 import GroupChat from "@/src/page-components/Home/GroupChat";
-import {baseURL} from "@/src/store/config";
+import {baseURL, isMessageTranslated} from "@/src/store/config";
 
 const Chat = ({current, setCurrent, loading, setLoading}) => {
 
@@ -67,8 +67,13 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
                 if(totalMessageLength === null)
                     setTotalMessageLength(total)
 
-                const translatedMessages = await translateMessages(data.reverse());
-                // const translatedMessages = data.reverse();
+                let translatedMessages;
+                if(isMessageTranslated)
+                    translatedMessages = await translateMessages(data.reverse());
+                else
+                    translatedMessages = data.reverse();
+
+
                 setHasMore(messageListLength + data.length < total);
                 setMessageList(prevList => {
                     return [...translatedMessages, ...prevList];
