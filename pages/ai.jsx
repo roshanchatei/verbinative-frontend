@@ -4,7 +4,7 @@ const Index = () => {
 
     return (
         <>
-            AI Text generation
+            hello
         </>
     );
 };

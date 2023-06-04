@@ -49,7 +49,7 @@ const RedditTextField = styled((props) => (
             "box-shadow",
         ]),
         "&:hover": {
-            backgroundColor: "#F2F2F2",
+            // backgroundColor: "#F2F2F2",
             borderColor: "#c4deff",
         },
         "&.Mui-focused": {
