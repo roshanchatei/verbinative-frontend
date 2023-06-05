@@ -4,7 +4,7 @@ const url = {
 }
 export const baseURL = url.prod;
 
-export const isMessageTranslated = false;
+export const isMessageTranslated = true;
 
 
 

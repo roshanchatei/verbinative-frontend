@@ -128,7 +128,7 @@ const Index = () => {
                         }}
                     >
                         <Box fontWeight={600} fontSize={'24px'}>
-                            Live Text Translation
+                            {isOn ? "Live Text Generation" : "Live Text Translation"}
                         </Box>
                         <Box display={'flex'} alignItems={'center'}>
                             <Box>
