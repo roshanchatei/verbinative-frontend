@@ -1,7 +1,6 @@
 module.exports = {
   apps : [{
-    script: 'node_modules/next/dist/bin/next',
-    args: 'start',
+    script: 'yarn run dev',
   }],
 
   deploy : {
@@ -13,7 +12,7 @@ module.exports = {
       repo : 'git@github.com:roshanchatei/verbinative-frontend.git',
       path : '/home/ubuntu',
       'pre-deploy-local': '',
-      'post-deploy': 'next build && pm2 reload ecosystem.config.js --env production',
+      'post-deploy': 'yarn install && yarn build && pm2 reload ecosystem.config.js --env production',
       'pre-setup': '',
       'ssh_options': 'ForwardAgent=yes'
     }
