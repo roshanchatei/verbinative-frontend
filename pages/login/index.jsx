@@ -44,7 +44,7 @@ const Index = () => {
             mode: 'cors'
         }
 
-        const response = await fetch(`${baseURL}/user/login`, options);
+        const response = await fetch(`/api/proxy/user/login`, options);
         return response.json();
     };
 

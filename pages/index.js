@@ -25,7 +25,7 @@ const Index = () => {
 
         const user_id = localStorage.getItem('id')
 
-        fetch(`${baseURL}/chat/user/${user_id}/`, requestOptions)
+        fetch(`/api/proxy/chat/user/${user_id}/`, requestOptions)
             .then(response => response.json())
             .then(result => {
                 setChats(result?.data?.chatroom.reverse())
