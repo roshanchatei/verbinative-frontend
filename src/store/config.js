@@ -1,6 +1,6 @@
 const url = {
     local: "http://localhost:8080",
-    prod: "http://54.211.136.163:8080"
+    prod: "https://verbinative-bakcend.onrender.com"
 }
 export const baseURL = url.prod;
 
@@ -15,4 +15,4 @@ const edenTranslation = {
     access_token3: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZmNkZWNmNDgtMmI3Yi00YWQ1LWFhODItYjE3OTg5NTMzYWJmIiwidHlwZSI6ImFwaV90b2tlbiJ9.bB4i5Y85ZQ63dzug21EdekEV8ndMot3ENaSuu_eslVI",
     access_token4: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiN2U5MThhODctNmZhNi00YTRjLWI3YzctMTIyMjM5YzJhODliIiwidHlwZSI6ImFwaV90b2tlbiJ9.VU3Pd37d9A9D-thnAnQ-FG2lceOxlk5gHq-avIYU7x0",
 };
-export const apiTranslateToken = edenTranslation.access_token1;
+export const apiTranslateToken = edenTranslation.access_token2;
