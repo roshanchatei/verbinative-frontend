@@ -35,19 +35,39 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
         setIsServer(current?.user_ids.length > 2)
     },[current]);
 
+    // const translateMessages = async (temp) => {
+    //     return await Promise.all(
+    //         temp?.map(async message => {
+    //             if (message.created_by !== userId) {
+    //                 const translatedText = await translate(message.text, 'auto-detect', targetLanguage);
+    //                 return {
+    //                     ...message,
+    //                     text: translatedText
+    //                 };
+    //             } else return message;
+    //         })
+    //     );
+    // };
+
     const translateMessages = async (temp) => {
-        return await Promise.all(
-            temp?.map(async message => {
-                if (message.created_by !== userId) {
-                    const translatedText = await translate(message.text, 'auto-detect', targetLanguage);
-                    return {
-                        ...message,
-                        text: translatedText
-                    };
-                } else return message;
-            })
-        );
+        const translatedMessages = [];
+
+        for (const message of temp) {
+            if (message.created_by !== userId) {
+                await new Promise(resolve => setTimeout(resolve, 300)); // Adding some delay
+                const translatedText = await translate(message.text, 'auto-detect', targetLanguage);
+                translatedMessages.push({
+                    ...message,
+                    text: translatedText
+                });
+            } else {
+                translatedMessages.push(message);
+            }
+        }
+
+        return translatedMessages;
     };
+
 
     const LoadMessages = () => {
         if (current.chatroom_id === null) {
