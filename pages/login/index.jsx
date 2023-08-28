@@ -29,10 +29,10 @@ const Index = () => {
         }
     }, [isVisible]);
 
-    const handleLogin = async () => {
+    const handleLogin = async (demoEmail, demoPassword, isGuestLogin) => {
         let data = {
-            email: email,
-            password: password
+            email: isGuestLogin ? demoEmail : email,
+            password: isGuestLogin ? demoPassword : password
         }
         let options = {
             method: 'POST',
@@ -48,10 +48,10 @@ const Index = () => {
         return response.json();
     };
 
-    const handleClick = () => {
+    const handleClick = (demoEmail, demoPassword, isGuestLogin) => {
         setLoading(true);
 
-        handleLogin().then(async (res) => {
+        handleLogin(demoEmail, demoPassword, isGuestLogin).then(async (res) => {
             if (res.message === "success") {
                 localStorage.setItem("token", res.data.data.token);
                 localStorage.setItem("id", res.data.data.user_id);
@@ -141,12 +141,23 @@ const Index = () => {
                     <Box color={'#333333'} fontSize={'12px'}>
                         Don’t have an account?
                     </Box>
-                    <Box sx={{cursor: 'pointer'}} ml={0.5} fontWeight={500} fontSize={'14px'} color={'#006ff8'}
+                    <Box sx={{cursor: 'pointer'}} mr={0.5} ml={0.5} fontWeight={500} fontSize={'14px'} color={'#006ff8'}
                          onClick={async () => {
                              await Router.push('/sign-up')
                          }}
                     >
                         SIGNUP
+                    </Box>
+                    <Box>|</Box>
+                    <Box ml={0.5} color={'#333333'} fontSize={'12px'}>
+                        use
+                    </Box>
+                    <Box sx={{cursor: 'pointer'}} ml={0.5} fontWeight={500} fontSize={'14px'} color={'#FFA15A'}
+                         onClick={() => {
+                             handleClick("grpchat123@gmail.com", "123", true)
+                         }}
+                    >
+                        GUEST LOGIN
                     </Box>
                 </Box>
             </MainContainer>

@@ -22,7 +22,7 @@ const Index = () => {
     const [languageId, setLanguageId] = useState("");
 
 
-    const [current, setCurrent] = useState(0);
+    const [current, setCurrent] = useState(1);
     const [loading,  setLoading] = useState(false);
 
 

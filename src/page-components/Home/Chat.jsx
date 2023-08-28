@@ -111,7 +111,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
 
     useEffect(() => {
 
-        const ws = new WebSocket(`ws://54.211.136.163:8080/ws/chat/${current?.chatroom_id}`);
+        const ws = new WebSocket(`ws://localhost:8080/ws/chat/${current?.chatroom_id}`);
 
         ws.addEventListener('open', () => {
             console.log('connected');
@@ -153,7 +153,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
                 Username: username,
             }
         };
-        const ws = new WebSocket(`ws://54.211.136.163:8080/ws/chat/${current?.chatroom_id}`);
+        const ws = new WebSocket(`ws://localhost:8080/ws/chat/${current?.chatroom_id}`);
 
         ws.onopen = () => {
             if (ws.readyState === WebSocket.OPEN) {
