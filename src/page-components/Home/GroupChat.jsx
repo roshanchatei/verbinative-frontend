@@ -1,6 +1,18 @@
 import InfoIcon from '@mui/icons-material/Info';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import {Avatar, Box, Button, Chip, CircularProgress, Divider, Drawer, Grid, IconButton} from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Button,
+    Chip,
+    CircularProgress,
+    Dialog,
+    Divider,
+    Drawer,
+    Grid, Hidden,
+    IconButton,
+    Slide, useMediaQuery
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import GroupIcon from '@mui/icons-material/Group';
 import LinkIcon from '@mui/icons-material/Link';
@@ -9,6 +21,12 @@ import {useSnackbar} from "notistack";
 import SearchAutoComplete from "@/src/page-components/Home/SearchAutoComplete";
 import {baseURL} from "@/src/store/config";
 import {useRouter} from "next/router";
+import * as React from 'react';
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Index = ({current, loading}) => {
 
@@ -24,6 +42,13 @@ const Index = ({current, loading}) => {
     const handleAddDrawer = () => {
         setAddOpen(!addOpen);
     };
+
+    const handleClose = () => {
+        setInfoOpen(false);
+        setAddOpen(false);
+    }
+
+    const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
     const handleCopy = async () => {
         await navigator.clipboard.writeText('');
@@ -110,187 +135,421 @@ const Index = ({current, loading}) => {
             </Box>
 
 
-            <Drawer anchor={'right'} open={infoOpen} onClose={handleInfoDrawer}>
-                <Box width={drawerWidth}>
-                    <Box
-                        width={"100%"}
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            px: 3,
-                            pt: 4,
-                        }}
-                        onClick={() => {
-                            setInfoOpen(false);
-                            setAddOpen(false);
-                        }}
-                    >
-                        <Box fontWeight={600} fontSize={'24px'}>
-                            Group Info
-                        </Box>
-                        <IconButton onClick={handleInfoDrawer}>
-                            <CloseIcon sx={{color: 'red'}} />
-                        </IconButton>
-                    </Box>
-                    <Box px={4} mt={5}>
-                        <Box mb={10} width={'100%'} display={'flex'} alignItems={'center'} flexDirection={'column'}>
-                            <Avatar
-                                sx={{background: '#181935', width: 150, height: 150}}
-                            >
-                               <GroupIcon fontSize={'large'} />
-                            </Avatar>
-                            <Box mt={2} fontSize={'20px'} fontWeight={500}>
-                                {current?.name}
-                            </Box>
-                        </Box>
-                        <Box mb={2} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
-                            <Box fontSize={'20px'} fontWeight={500}>
-                                {current?.user_ids.length} Participants
-                            </Box>
-                            <Box display={'flex'} alignItems={'center'}>
-                                <IconButton onClick={() => {setInfoOpen(false); setAddOpen(true)}}>
-                                    <GroupAddIcon />
-                                </IconButton>
-                                <Box ml={1.5} />
-                                <IconButton onClick={handleCopy}>
-                                    <LinkIcon />
-                                </IconButton>
-                            </Box>
-                        </Box>
+            <Hidden mdDown>
+                <Drawer anchor={'right'} open={infoOpen} onClose={handleInfoDrawer}>
+                    <Box width={drawerWidth}>
                         <Box
-                            height={'280px'}
-                            width={'100%'}
-                            display={'flex'} flexDirection={'column'}
+                            width={"100%"}
                             sx={{
-                                scrollBehavior: "smooth",
-                                overflowY: "scroll",
-                                '&::-webkit-scrollbar': {
-                                    display: 'none'
-                                }
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                px: 3,
+                                pt: 4,
+                            }}
+                            onClick={() => {
+                                setInfoOpen(false);
+                                setAddOpen(false);
                             }}
                         >
-                            {
-                                detailLoading ? (
-                                    <Box height={'280px'} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                                        <CircularProgress size={28} />
-                                    </Box>
-                                ) : (
-                                    <>
-                                        {
-                                            usersDetails.map((each, index) => (
-                                                <>
-                                                    <Box key={index} mb={1} mt={1} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} fontSize={'16px'}>
-                                                        <Box>~{each?.username}</Box>
-                                                        <Box>{each?.region}</Box>
+                            <Box fontWeight={600} fontSize={'24px'}>
+                                Group Info
+                            </Box>
+                            <IconButton onClick={handleInfoDrawer}>
+                                <CloseIcon sx={{color: 'red'}} />
+                            </IconButton>
+                        </Box>
+                        <Box px={4} mt={5}>
+                            <Box mb={10} width={'100%'} display={'flex'} alignItems={'center'} flexDirection={'column'}>
+                                <Avatar
+                                    sx={{background: '#181935', width: 150, height: 150}}
+                                >
+                                    <GroupIcon fontSize={'large'} />
+                                </Avatar>
+                                <Box mt={2} fontSize={'20px'} fontWeight={500}>
+                                    {current?.name}
+                                </Box>
+                            </Box>
+                            <Box mb={2} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                                <Box fontSize={'20px'} fontWeight={500}>
+                                    {current?.user_ids.length} Participants
+                                </Box>
+                                <Box display={'flex'} alignItems={'center'}>
+                                    <IconButton onClick={() => {setInfoOpen(false); setAddOpen(true)}}>
+                                        <GroupAddIcon />
+                                    </IconButton>
+                                    <Box ml={1.5} />
+                                    <IconButton onClick={handleCopy}>
+                                        <LinkIcon />
+                                    </IconButton>
+                                </Box>
+                            </Box>
+                            <Box
+                                height={'280px'}
+                                width={'100%'}
+                                display={'flex'} flexDirection={'column'}
+                                sx={{
+                                    scrollBehavior: "smooth",
+                                    overflowY: "scroll",
+                                    '&::-webkit-scrollbar': {
+                                        display: 'none'
+                                    }
+                                }}
+                            >
+                                {
+                                    detailLoading ? (
+                                        <Box height={'280px'} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                                            <CircularProgress size={28} />
+                                        </Box>
+                                    ) : (
+                                        <>
+                                            {
+                                                usersDetails.map((each, index) => (
+                                                    <Box key={index}>
+                                                        <Box mb={1} mt={1} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} fontSize={'16px'}>
+                                                            <Box>~{each?.username}</Box>
+                                                            <Box>{each?.region}</Box>
+                                                        </Box>
+                                                        {
+                                                            index !== usersDetails?.length - 1 && <Divider />
+                                                        }
                                                     </Box>
-                                                    {
-                                                        index !== usersDetails?.length - 1 && <Divider />
-                                                    }
-                                                </>
+                                                ))
+                                            }
+                                        </>
+                                    )
+                                }
+                            </Box>
+                        </Box>
+                    </Box>
+                </Drawer>
+
+                <Drawer anchor={'right'} open={addOpen} onClose={handleAddDrawer}>
+                    <Box width={drawerWidth}>
+                        <Box
+                            width={"100%"}
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                px: 3,
+                                pt: 4,
+                            }}
+                            onClick={() => {
+                                setAddOpen(false);
+                                setInfoOpen(false)
+                            }}
+                        >
+                            <Box fontWeight={600} fontSize={'24px'}>
+                                Add Participants
+                            </Box>
+                            <IconButton onClick={handleInfoDrawer}>
+                                <CloseIcon sx={{color: 'red'}} />
+                            </IconButton>
+                        </Box>
+                        <Box px={4} mt={5}>
+                            <SearchAutoComplete type={'add'} selectedList={selectedList} setSelectedList={setSelectedList} />
+                            <Box mb={2} mt={10} fontSize={'20px'} fontWeight={500}>
+                                Participants to be added
+                            </Box>
+                            <Box
+                                mb={2}
+                                height={'380px'}
+                                width={'100%'}
+                                display={'flex'} flexDirection={'column'}
+                                sx={{
+                                    scrollBehavior: "smooth",
+                                    overflowY: "scroll",
+                                }}
+                            >
+                                <Grid container spacing={3} >
+                                    {
+                                        selectedList.map((each, index) => (
+                                            <Grid item xs={4} key={index}>
+                                                <Chip
+                                                    label={each?.username}
+                                                    onDelete={() => {
+                                                        const temp = selectedList.filter(e => e?.user_id !== each?.user_id)
+                                                        setSelectedList(temp)
+                                                    }}
+                                                    sx={{
+                                                        padding: '15px 7px',
+                                                        fontSize: '14px',
+                                                        border: '1.5px solid #4D9FFF',
+                                                        "&.MuiChip-root": {
+                                                            width: '100%',
+                                                            display: 'flex',
+                                                            alignItems: 'center',
+                                                            justifyContent: 'space-between',
+                                                        },
+                                                    }}
+
+                                                />
+                                            </Grid>
+
+                                        ))
+                                    }
+                                </Grid>
+
+                            </Box>
+                            <Button
+                                disabled={selectedList.length < 1}
+                                onClick={handleAddUsers}
+                                disableElevation
+                                variant={"contained"}
+                                fullWidth
+                                sx={{
+                                    backgroundColor: "#268AFF",
+                                    color: "#FFF",
+                                    borderRadius: "15px",
+                                    zIndex: 2,
+                                    py: 1.5,
+                                    fontSize: '16px',
+                                    "&:hover": {
+                                        backgroundColor: "#006ff8",
+                                    },
+                                    textTransform: 'none'
+                                }}
+                            >
+                                Add
+                            </Button>
+                        </Box>
+                    </Box>
+                </Drawer>
+            </Hidden>
+
+
+            <Hidden mdUp>
+                <Dialog
+                    open={infoOpen}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={handleClose}
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <Box
+                        width={"100%"}
+                        height={"100%"}
+                        display={"flex"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                    >
+                        <Box
+                            py={3}
+                            px={3}
+                            zIndex={1}
+                            width={drawerWidth}
+                            bgcolor={"#FFF"}
+                            display={"flex"}
+                            flexDirection={"column"}
+                            justifyContent={"center"}
+                            alignItems={"center"}
+                        >
+                            <Box
+                                width={"100%"}
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    px: 3,
+                                    pt: 4,
+                                }}
+                                onClick={() => {
+                                    setInfoOpen(false);
+                                    setAddOpen(false);
+                                }}
+                            >
+                                <Box fontWeight={600} fontSize={'24px'}>
+                                    Group Info
+                                </Box>
+                                <IconButton onClick={handleInfoDrawer}>
+                                    <CloseIcon sx={{color: 'red'}} />
+                                </IconButton>
+                            </Box>
+                            <Box width={"100%"} px={3} mt={5}>
+                                <Box mb={10} width={'100%'} display={'flex'} alignItems={'center'} flexDirection={'column'}>
+                                    <Avatar
+                                        sx={{background: '#181935', width: 150, height: 150}}
+                                    >
+                                        <GroupIcon fontSize={'large'} />
+                                    </Avatar>
+                                    <Box mt={2} fontSize={'20px'} fontWeight={500}>
+                                        {current?.name}
+                                    </Box>
+                                </Box>
+                                <Box mb={2} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                                    <Box fontSize={'20px'} fontWeight={500}>
+                                        {current?.user_ids.length} Participants
+                                    </Box>
+                                    <Box display={'flex'} alignItems={'center'}>
+                                        <IconButton onClick={() => {setInfoOpen(false); setAddOpen(true)}}>
+                                            <GroupAddIcon />
+                                        </IconButton>
+                                        <Box ml={1.5} />
+                                        <IconButton onClick={handleCopy}>
+                                            <LinkIcon />
+                                        </IconButton>
+                                    </Box>
+                                </Box>
+                                <Box
+                                    mb={6}
+                                    pr={2}
+                                    height={'200px'}
+                                    width={'100%'}
+                                    display={'flex'} flexDirection={'column'}
+                                    sx={{
+                                        scrollBehavior: "smooth",
+                                        overflowY: "scroll",
+                                    }}
+                                >
+                                    {
+                                        detailLoading ? (
+                                            <Box height={'280px'} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                                                <CircularProgress size={28} />
+                                            </Box>
+                                        ) : (
+                                            <>
+                                                {
+                                                    usersDetails.map((each, index) => (
+                                                        <Box key={index}>
+                                                            <Box mb={1} mt={1} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} fontSize={'16px'}>
+                                                                <Box>~{each?.username}</Box>
+                                                                <Box>{each?.region}</Box>
+                                                            </Box>
+                                                            {
+                                                                index !== usersDetails?.length - 1 && <Divider />
+                                                            }
+                                                        </Box>
+                                                    ))
+                                                }
+                                            </>
+                                        )
+                                    }
+                                </Box>
+                            </Box>
+                        </Box>
+                    </Box>
+                </Dialog>
+
+                <Dialog
+                    open={addOpen}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={handleClose}
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <Box
+                        width={"100%"}
+                        height={"100%"}
+                        display={"flex"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                    >
+                        <Box
+                            py={3}
+                            px={3}
+                            zIndex={1}
+                            width={drawerWidth}
+                            bgcolor={"#FFF"}
+                            display={"flex"}
+                            flexDirection={"column"}
+                            justifyContent={"center"}
+                            alignItems={"center"}
+                        >
+                            <Box
+                                width={"100%"}
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    px: 3,
+                                    pt: 4,
+                                }}
+                                onClick={() => {
+                                    setAddOpen(false);
+                                    setInfoOpen(false)
+                                }}
+                            >
+                                <Box fontWeight={600} fontSize={'24px'}>
+                                    Add Participants
+                                </Box>
+                                <IconButton onClick={handleInfoDrawer}>
+                                    <CloseIcon sx={{color: 'red'}} />
+                                </IconButton>
+                            </Box>
+                            <Box width={"100%"} px={3} mt={5}>
+                                <SearchAutoComplete type={'add'} selectedList={selectedList} setSelectedList={setSelectedList} />
+                                <Box mb={2} mt={10} fontSize={'20px'} fontWeight={500}>
+                                    Participants to be added
+                                </Box>
+                                <Box
+                                    mb={2}
+                                    height={'300px'}
+                                    width={'100%'}
+                                    display={'flex'} flexDirection={'column'}
+                                    sx={{
+                                        scrollBehavior: "smooth",
+                                        overflowY: "scroll",
+                                    }}
+                                >
+                                    <Grid container spacing={3} >
+                                        {
+                                            selectedList.map((each, index) => (
+                                                <Grid item xs={4} key={index}>
+                                                    <Chip
+                                                        label={each?.username}
+                                                        onDelete={() => {
+                                                            const temp = selectedList.filter(e => e?.user_id !== each?.user_id)
+                                                            setSelectedList(temp)
+                                                        }}
+                                                        sx={{
+                                                            padding: '15px 7px',
+                                                            fontSize: '14px',
+                                                            border: '1.5px solid #4D9FFF',
+                                                            "&.MuiChip-root": {
+                                                                width: '100%',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'space-between',
+                                                            },
+                                                        }}
+
+                                                    />
+                                                </Grid>
+
                                             ))
                                         }
-                                    </>
-                                )
-                            }
-                        </Box>
+                                    </Grid>
 
+                                </Box>
+                                <Button
+                                    disabled={selectedList.length < 1}
+                                    onClick={handleAddUsers}
+                                    disableElevation
+                                    variant={"contained"}
+                                    fullWidth
+                                    sx={{
+                                        backgroundColor: "#268AFF",
+                                        color: "#FFF",
+                                        borderRadius: "15px",
+                                        zIndex: 2,
+                                        py: 1.5,
+                                        fontSize: '16px',
+                                        "&:hover": {
+                                            backgroundColor: "#006ff8",
+                                        },
+                                        textTransform: 'none',
+                                        mb: 4
+                                    }}
+                                >
+                                    Add
+                                </Button>
+                            </Box>
+                        </Box>
                     </Box>
-                </Box>
-            </Drawer>
+                </Dialog>
+            </Hidden>
 
-            <Drawer anchor={'right'} open={addOpen} onClose={handleAddDrawer}>
-                <Box width={drawerWidth}>
-                    <Box
-                        width={"100%"}
-                        sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            px: 3,
-                            pt: 4,
-                        }}
-                        onClick={() => {
-                            setAddOpen(false);
-                            setInfoOpen(false)
-                        }}
-                    >
-                        <Box fontWeight={600} fontSize={'24px'}>
-                            Add Participants
-                        </Box>
-                        <IconButton onClick={handleInfoDrawer}>
-                            <CloseIcon sx={{color: 'red'}} />
-                        </IconButton>
-                    </Box>
-                    <Box px={4} mt={5}>
-                        <SearchAutoComplete type={'add'} selectedList={selectedList} setSelectedList={setSelectedList} />
-                        <Box mb={2} mt={10} fontSize={'20px'} fontWeight={500}>
-                            Participants to be added
-                        </Box>
-                        <Box
-                            mb={2}
-                            height={'380px'}
-                            width={'100%'}
-                            display={'flex'} flexDirection={'column'}
-                            sx={{
-                                scrollBehavior: "smooth",
-                                overflowY: "scroll",
-                            }}
-                        >
-                            <Grid container spacing={3} >
-                                {
-                                    selectedList.map((each, index) => (
-                                        <Grid item xs={4} key={index}>
-                                            <Chip
-                                                label={each?.username}
-                                                onDelete={() => {
-                                                    const temp = selectedList.filter(e => e?.user_id !== each?.user_id)
-                                                    setSelectedList(temp)
-                                                }}
-                                                sx={{
-                                                    padding: '15px 7px',
-                                                    fontSize: '14px',
-                                                    border: '1.5px solid #4D9FFF',
-                                                    "&.MuiChip-root": {
-                                                        width: '100%',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'space-between',
-                                                    },
-                                                }}
-
-                                            />
-                                        </Grid>
-
-                                    ))
-                                }
-                            </Grid>
-
-                        </Box>
-                        <Button
-                            disabled={selectedList.length < 1}
-                            onClick={handleAddUsers}
-                            disableElevation
-                            variant={"contained"}
-                            fullWidth
-                            sx={{
-                                backgroundColor: "#268AFF",
-                                color: "#FFF",
-                                borderRadius: "15px",
-                                zIndex: 2,
-                                py: 1.5,
-                                fontSize: '16px',
-                                "&:hover": {
-                                    backgroundColor: "#006ff8",
-                                },
-                                textTransform: 'none'
-                            }}
-                        >
-                            Add
-                        </Button>
-                    </Box>
-                </Box>
-            </Drawer>
 
         </>
     );

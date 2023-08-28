@@ -1,10 +1,15 @@
-import {Box, Grid} from "@mui/material";
+import {Box, Dialog, Grid, Hidden, Slide} from "@mui/material";
 import ChatCard from "@/src/page-components/Home/ChatCard";
 import {useState, useEffect} from "react";
 import Chat from "@/src/page-components/Home/Chat";
 import SearchAutoComplete from "@/src/page-components/Home/SearchAutoComplete";
 import {baseURL} from "@/src/store/config";
 import CircularProgress from "@mui/material/CircularProgress";
+import * as React from 'react';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Index = () => {
 
@@ -14,6 +19,14 @@ const Index = () => {
     const [loading, setLoading] = useState(false);
 
     const [chatsLoading, setChatsLoading] = useState(false)
+
+    const [open, setOpen] = useState(false);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     useEffect(() => {
         setChatsLoading(true);
@@ -38,7 +51,7 @@ const Index = () => {
         <>
             <Box width={'100%'}>
                 <Grid container>
-                    <Grid item xs={5}>
+                    <Grid item md={5} xs={12}>
                         <Box bgcolor={'#f1f1f1'} width={'100%'} borderRight={'1px solid #E1E1E1'}>
                             <Box width={'100%'} p={2} borderBottom={'1px solid #E1E1E1'}>
                                 <SearchAutoComplete type={'search'} chats={chats} setChats={setChats} />
@@ -79,6 +92,7 @@ const Index = () => {
                                                         current={current}
                                                         setCurrent={setCurrent}
                                                         loading={loading}
+                                                        handleClickOpen={handleClickOpen}
                                                     />
                                                 ))
                                             }
@@ -88,22 +102,40 @@ const Index = () => {
                             </Box>
                         </Box>
                     </Grid>
-                    <Grid item xs={7}>
-                        {
-                            current !== null ? (
-                                <Chat
-                                    current={current}
-                                    setCurrent={setCurrent}
-                                    loading={loading}
-                                    setLoading={setLoading}
-                                />
-                            ) : (
-                                <Box display={'flex'} alignItems={'center'} justifyContent={'center'} width={'100%'} height={'calc(100vh - 48px)'}>
-                                    Click on any user to see the chats
-                                </Box>
-                            )
-                        }
-                    </Grid>
+                    <Hidden mdDown>
+                        <Grid item xs={7}>
+                            {
+                                current !== null ? (
+                                    <Chat
+                                        current={current}
+                                        setCurrent={setCurrent}
+                                        loading={loading}
+                                        setLoading={setLoading}
+                                        handleClose={handleClose}
+                                    />
+                                ) : (
+                                    <Box display={'flex'} alignItems={'center'} justifyContent={'center'} width={'100%'} height={'calc(100vh - 48px)'}>
+                                        Click on any user to see the chats
+                                    </Box>
+                                )
+                            }
+                        </Grid>
+                    </Hidden>
+
+                    <Dialog
+                        fullScreen
+                        open={open}
+                        onClose={handleClose}
+                        TransitionComponent={Transition}
+                    >
+                        <Chat
+                            current={current}
+                            setCurrent={setCurrent}
+                            loading={loading}
+                            setLoading={setLoading}
+                            handleClose={handleClose}
+                        />
+                    </Dialog>
                 </Grid>
             </Box>
         </>

@@ -1,4 +1,4 @@
-import {Box, CircularProgress, IconButton, InputAdornment, TextField} from "@mui/material";
+import {Box, CircularProgress, IconButton, InputAdornment, TextField, useMediaQuery} from "@mui/material";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import SearchIcon from '@mui/icons-material/Search';
 import SendIcon from '@mui/icons-material/Send';
@@ -10,7 +10,7 @@ import {translate} from "@/src/store/translate";
 import GroupChat from "@/src/page-components/Home/GroupChat";
 import {baseURL, isMessageTranslated} from "@/src/store/config";
 
-const Chat = ({current, setCurrent, loading, setLoading}) => {
+const Chat = ({current, setCurrent, loading, setLoading, handleClose}) => {
 
     const { enqueueSnackbar } = useSnackbar();
     const containerRef = useRef(null);
@@ -27,6 +27,13 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
     const [totalMessageLength, setTotalMessageLength] = useState(null)
 
     const [targetLanguage, setTargetLanguage] = useState(localStorage.getItem('language_id'))
+
+    const parsedURL = new URL(baseURL);
+    const hostname = parsedURL.hostname;
+    const port = parsedURL.port;
+    const formattedHostname = port ? `${hostname}:${port}` : hostname;
+
+    const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
     useEffect(() =>{
         setMessageListLength(0)
@@ -70,7 +77,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
 
 
     const LoadMessages = () => {
-        if (current.chatroom_id === null) {
+        if (current?.chatroom_id === null || current?.chatroom_id === undefined) {
             setHasMore(false);
             return;
         }
@@ -78,7 +85,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
             return;
         setLoading(true)
 
-        fetch(`${baseURL}/chat/${current.chatroom_id}/messages?limit=${10}&skip=${messageListLength}`)
+        fetch(`${baseURL}/chat/${current?.chatroom_id}/messages?limit=${10}&skip=${messageListLength}`)
             .then(response => response.json())
             .then(async (res) => {
                 const data = res?.data?.messages;
@@ -89,16 +96,17 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
 
                 let translatedMessages;
                 if(isMessageTranslated)
-                    translatedMessages = await translateMessages(data.reverse());
+                    translatedMessages = await translateMessages(data?.reverse());
                 else
-                    translatedMessages = data.reverse();
+                    translatedMessages = data?.reverse();
 
 
-                setHasMore(messageListLength + data.length < total);
-                setMessageList(prevList => {
-                    return [...translatedMessages, ...prevList];
-                });
-                setMessageListLength(prev => prev + data.length)
+                setHasMore(messageListLength + data?.length < total);
+                if(translatedMessages)
+                    setMessageList(prevList => {
+                        return [...translatedMessages, ...prevList];
+                    });
+                setMessageListLength(prev => prev + data?.length)
             })
             .catch((error) => {
                 enqueueSnackbar(error.message ? error.message : 'Something went wrong', {
@@ -111,7 +119,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
 
     useEffect(() => {
 
-        const ws = new WebSocket(`ws://localhost:8080/ws/chat/${current?.chatroom_id}`);
+        const ws = new WebSocket(`ws://${formattedHostname}/ws/chat/${current?.chatroom_id}`);
 
         ws.addEventListener('open', () => {
             console.log('connected');
@@ -153,7 +161,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
                 Username: username,
             }
         };
-        const ws = new WebSocket(`ws://localhost:8080/ws/chat/${current?.chatroom_id}`);
+        const ws = new WebSocket(`ws://${formattedHostname}/ws/chat/${current?.chatroom_id}`);
 
         ws.onopen = () => {
             if (ws.readyState === WebSocket.OPEN) {
@@ -173,17 +181,26 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
 
     return (
         <>
-            <Box width={'100%'} height={'calc(100vh - 48px)'} position={'relative'}>
+            <Box width={'100%'} height={isMobile ? "100vh" : 'calc(100vh - 48px)'} position={'relative'}>
 
                 <Box bgcolor={'#f6f6f6'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} width={'100%'} py={0.5} px={3} pt={1.2}>
-                    <IconButton
-                        sx={{pl: 2, py: 1.5}}
-                        onClick={() => {
-                            setCurrent(null)
-                        }}
-                    >
-                        <ArrowBackIosIcon />
-                    </IconButton>
+                    <Box display={'flex'} alignItems={'center'}>
+                        <IconButton
+                            sx={{pl: 2, py: 1.5}}
+                            onClick={() => {
+                                setCurrent(null)
+                                if(isMobile){
+                                    handleClose()
+                                }
+
+                            }}
+                        >
+                            <ArrowBackIosIcon />
+                        </IconButton>
+                        {
+                            isServer &&  <Box ml={1} fontWeight={500} fontSize={'20px'}>{current?.name}</Box>
+                        }
+                    </Box>
                     {
                         isServer ? (
                             <GroupChat current={current} loading={loading} />
@@ -201,7 +218,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
                         <Box
                             zIndex={10}
                             position={'absolute'} width={'100%'}
-                            height={'calc(100vh - 169px)'}
+                            height={isMobile ? 'calc(100vh - 120px)' : 'calc(100vh - 169px)'}
                             display={'flex'} alignItems={'center'} justifyContent={'center'}
                             sx={{
                                 backdropFilter: "blur(2px)",
@@ -217,7 +234,7 @@ const Chat = ({current, setCurrent, loading, setLoading}) => {
                     )
                 }
                 <Box
-                    height={'calc(100vh - 169px)'}
+                    height={isMobile ? 'calc(100vh - 120px)' : 'calc(100vh - 169px)'}
                     position={'absolute'} bottom={60}
                     width={'100%'}
                     display={'flex'} flexDirection={'column-reverse'}

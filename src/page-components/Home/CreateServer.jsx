@@ -1,7 +1,7 @@
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import {useState} from "react";
 import {useSnackbar} from "notistack";
-import {Box, Button, Chip, Drawer, Grid, IconButton} from "@mui/material";
+import {Box, Button, Chip, Drawer, Grid, IconButton, useMediaQuery} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import SearchAutoComplete from "@/src/page-components/Home/SearchAutoComplete";
 import CustomTextField from "@/src/components/CustomTextField";
@@ -20,6 +20,8 @@ const Index = () => {
     const handleCreateDrawer = () => {
         setCreateOpen(!createOpen);
     };
+
+    const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
     useEffect(() => {
         fetch(`${baseURL}/user/${myUserId}`)
@@ -66,7 +68,7 @@ const Index = () => {
             </IconButton>
 
             <Drawer anchor={'right'} open={createOpen} onClose={handleCreateDrawer}>
-                <Box width={drawerWidth}>
+                <Box width={isMobile ? "100vw" : drawerWidth}>
                     <Box
                         width={"100%"}
                         sx={{
@@ -87,7 +89,7 @@ const Index = () => {
                             <CloseIcon sx={{color: 'red'}} />
                         </IconButton>
                     </Box>
-                    <Box px={4} mt={5}>
+                    <Box px={4} mt={4}>
                         <CustomTextField
                             page={'login'}
                             label={"Enter group name"}

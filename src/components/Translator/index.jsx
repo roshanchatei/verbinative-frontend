@@ -1,6 +1,17 @@
 import IconButton from "@mui/material/IconButton";
 import {useEffect, useState} from "react";
-import {Box, Button, Checkbox, Divider, Drawer, InputAdornment, MenuItem, Skeleton, Switch} from "@mui/material";
+import {
+    Box,
+    Button,
+    Checkbox,
+    Divider,
+    Drawer,
+    InputAdornment,
+    MenuItem,
+    Skeleton,
+    Switch,
+    useMediaQuery
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -33,6 +44,8 @@ const Index = () => {
         setChecked(event.target.checked);
     };
 
+    const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
+
     const handleCopy = async () => {
         await navigator.clipboard.writeText(output);
         enqueueSnackbar("Copied to clipboard", {
@@ -55,8 +68,6 @@ const Index = () => {
                     const translatedOutput = await translate(aiResponse, 'en', targetLanguage);
                     setOutput(translatedOutput);
                 }
-
-
             } catch (error) {
                 console.log(error);
             } finally {
@@ -112,7 +123,7 @@ const Index = () => {
 
             <Drawer anchor={'right'} open={mobOpen} onClose={handleMobDrawer}>
                 <Box
-                    width={drawerWidth}
+                    width={isMobile ? "100vw" : drawerWidth}
                     sx={{
                         background: isOn ? 'linear-gradient(180deg, rgba(38,138,255,1) 0%, rgba(255,255,255,1) 85%)' : '#FFF',
                     }}
@@ -130,19 +141,22 @@ const Index = () => {
                         <Box fontWeight={600} fontSize={'24px'}>
                             {isOn ? "Live Text Generation" : "Live Text Translation"}
                         </Box>
-                        <Box display={'flex'} alignItems={'center'}>
-                            <Box>
-                                AI
-                            </Box>
-                            <Switch
-                                checked={isOn}
-                                onChange={handleSwitch}
-                            />
-                            <Box ml={2} />
-                            <IconButton onClick={handleMobDrawer}>
-                                <CloseIcon sx={{color: 'red'}} />
-                            </IconButton>
-                        </Box>
+                        {/*<Box display={'flex'} alignItems={'center'}>*/}
+                        {/*    <Box>*/}
+                        {/*        AI*/}
+                        {/*    </Box>*/}
+                        {/*    <Switch*/}
+                        {/*        checked={isOn}*/}
+                        {/*        onChange={handleSwitch}*/}
+                        {/*    />*/}
+                        {/*    <Box ml={2} />*/}
+                        {/*    <IconButton onClick={handleMobDrawer}>*/}
+                        {/*        <CloseIcon sx={{color: 'red'}} />*/}
+                        {/*    </IconButton>*/}
+                        {/*</Box>*/}
+                        <IconButton onClick={handleMobDrawer}>
+                            <CloseIcon sx={{color: 'red'}} />
+                        </IconButton>
 
                     </Box>
                     <Box mt={3} />

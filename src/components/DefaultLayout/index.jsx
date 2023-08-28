@@ -1,6 +1,6 @@
 import AppBar from '@mui/material/AppBar';
 import IconButton from '@mui/material/IconButton';
-import {Avatar, Box, Drawer, Menu, MenuItem} from "@mui/material";
+import {Avatar, Box, Drawer, Hidden, Menu, MenuItem} from "@mui/material";
 import PropTypes from "prop-types";
 import {useRouter} from "next/router";
 import {useSnackbar} from "notistack";
@@ -65,45 +65,51 @@ const Index = (props) => {
                         <Box pt={0.7} ml={2} mr={3} onClick={handleGoToHome} sx={{cursor: 'pointer'}}>
                             <img src={'/images/logo-color-white.svg'} width={'55px'} />
                         </Box>
-                        <Box
-                            fontFamily={'Saira Condensed, sans-serif'}
-                            fontSize={'30px'}
-                            color={'#FFF'}
-                            fontWeight={600}
-                            letterSpacing={'0.1px'}
-                            onClick={handleGoToHome}
-                            sx={{cursor: 'pointer'}}
-                        >
-                           VerbiNative
-                        </Box>
+                        <Hidden mdDown>
+                            <Box
+                                fontFamily={'Saira Condensed, sans-serif'}
+                                fontSize={'30px'}
+                                color={'#FFF'}
+                                fontWeight={600}
+                                letterSpacing={'0.1px'}
+                                onClick={handleGoToHome}
+                                sx={{cursor: 'pointer'}}
+                            >
+                                VerbiNative
+                            </Box>
+                        </Hidden>
+
                     </Box>
                     <Box display={'flex'} alignItems={'center'}>
                         {/*<img src={getCountryFlag()} alt={'flag'} />*/}
                         <CreateServer />
-                        <Box ml={2} />
+                        <Box ml={{md: 2, xs: 1}} />
                         <Translator />
-                        <Box ml={2} />
+                        <Box ml={{md: 2, xs: 1}} />
                         <Box
                             display={"flex"}
                             alignItems={"center"}
-                            mr={4}
+                            mr={{md: 4, xs: 2}}
                             ref={anchorRef}
                             sx={{ cursor: "pointer" }}
                             onClick={handleToggle}
                         >
                             <Avatar src={'https://source.unsplash.com/featured/300x202'} sx={{background: '#181935'}} />
-                            <Box
-                                bgcolor={"#cecece"}
-                                pr={1.5}
-                                pl={2}
-                                py={0.2}
-                                fontSize={"13px"}
-                                borderRadius={"5px"}
-                                ml={-1}
-                                fontWeight={600}
-                            >
-                                {localStorage.getItem('username')}
-                            </Box>
+                            <Hidden mdDown>
+                                <Box
+                                    bgcolor={"#cecece"}
+                                    pr={1.5}
+                                    pl={2}
+                                    py={0.2}
+                                    fontSize={"13px"}
+                                    borderRadius={"5px"}
+                                    ml={-1}
+                                    fontWeight={600}
+                                >
+                                    {localStorage.getItem('username')}
+                                </Box>
+                            </Hidden>
+
                         </Box>
                         <Menu
                             anchorOrigin={{

@@ -2,7 +2,7 @@ const url = {
     local: "http://localhost:8080",
     prod: "https://verbinative-bakcend.onrender.com"
 }
-export const baseURL = url.local;
+export const baseURL = url.prod;
 
 export const isMessageTranslated = false;
 

@@ -8,7 +8,7 @@ export const generateText = (prompt, maxToken) => {
             authorization: `Bearer ${apiTranslateToken}`
         },
         body: JSON.stringify({
-            providers: 'openai',
+            providers: 'ai21labs',
             text: prompt,
             temperature: 0.5,
             max_tokens: maxToken || 500,
@@ -16,7 +16,7 @@ export const generateText = (prompt, maxToken) => {
     })
         .then(response => response.json())
         .then(result => {
-            return result.openai.generated_text;
+            return result.ai21labs.generated_text;
         })
         .catch(error => console.log('error', error));
 };
