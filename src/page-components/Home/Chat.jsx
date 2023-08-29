@@ -119,7 +119,7 @@ const Chat = ({current, setCurrent, loading, setLoading, handleClose}) => {
 
     useEffect(() => {
 
-        const ws = new WebSocket(`ws://${formattedHostname}/ws/chat/${current?.chatroom_id}`);
+        const ws = new WebSocket(`wss://${formattedHostname}/ws/chat/${current?.chatroom_id}`);
 
         ws.addEventListener('open', () => {
             console.log('connected');
@@ -161,7 +161,7 @@ const Chat = ({current, setCurrent, loading, setLoading, handleClose}) => {
                 Username: username,
             }
         };
-        const ws = new WebSocket(`ws://${formattedHostname}/ws/chat/${current?.chatroom_id}`);
+        const ws = new WebSocket(`wss://${formattedHostname}/ws/chat/${current?.chatroom_id}`);
 
         ws.onopen = () => {
             if (ws.readyState === WebSocket.OPEN) {
