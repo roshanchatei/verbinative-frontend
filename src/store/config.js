@@ -1,6 +1,6 @@
 const url = {
     local: "http://localhost:8080",
-    prod: "https://verbinative-bakcend.onrender.com"
+    prod: "https://verbinative-backend.onrender.com"
 }
 export const baseURL = url.prod;
 
