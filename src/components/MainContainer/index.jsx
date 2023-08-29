@@ -7,7 +7,7 @@ const Index = ({children, current, setCurrent}) => {
     return (
         <>
             <Container maxWidth={'lg'}>
-                <Box p={{md:4, xs: 2}} width={'100%'} height={{md: "100vh", xs: "90vh"}} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                <Box p={{md:4, xs: 2}} width={'100%'} height={{md: "100vh", xs: "85vh"}} display={'flex'} alignItems={'center'} justifyContent={'center'}>
                     <Box display={{md: "block", xs: "none"}} width={'49%'} position={'relative'}>
                         {
                             current === 1 && (
@@ -35,7 +35,7 @@ const Index = ({children, current, setCurrent}) => {
                     </Hidden>
                     <Box width={{md: "49%", xs: "100%"}}>
                         <Hidden mdUp>
-                            <Box width={"100%"} mb={10} display={'flex'} alignItems={'center'} justifyContent={"center"} position={'relative'}>
+                            <Box width={"100%"} mb={5} display={'flex'} alignItems={'center'} justifyContent={"center"} position={'relative'}>
                                 {
                                     current === 1 && (
                                         <IconButton

@@ -183,10 +183,10 @@ const Chat = ({current, setCurrent, loading, setLoading, handleClose}) => {
         <>
             <Box width={'100%'} height={isMobile ? "100vh" : 'calc(100vh - 48px)'} position={'relative'}>
 
-                <Box bgcolor={'#f6f6f6'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} width={'100%'} py={0.5} px={3} pt={1.2}>
+                <Box bgcolor={'#f6f6f6'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} width={'100%'} py={0.5} px={{md: 3, xs: 1.5}} pt={{md: 1.2, xs: 0.7}}>
                     <Box display={'flex'} alignItems={'center'}>
                         <IconButton
-                            sx={{pl: 2, py: 1.5}}
+                            sx={{pl: {md: 2, xs: 1.5}, py: 1.5}}
                             onClick={() => {
                                 setCurrent(null)
                                 if(isMobile){
@@ -234,7 +234,7 @@ const Chat = ({current, setCurrent, loading, setLoading, handleClose}) => {
                     )
                 }
                 <Box
-                    height={isMobile ? 'calc(100vh - 120px)' : 'calc(100vh - 169px)'}
+                    height={isMobile ? '71vh' : 'calc(100vh - 169px)'}
                     position={'absolute'} bottom={60}
                     width={'100%'}
                     display={'flex'} flexDirection={'column-reverse'}

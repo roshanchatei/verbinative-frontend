@@ -159,7 +159,7 @@ const Index = () => {
                         </IconButton>
 
                     </Box>
-                    <Box mt={3} />
+                    <Box mt={{md: 3, xs: 2}} />
                     <Box px={3}>
                         <CustomTextField
                             disabled={checked || isOn}
@@ -178,7 +178,7 @@ const Index = () => {
                                 </MenuItem>
                             ))}
                         </CustomTextField>
-                        <Box my={0.5} display={'flex'} width={'100%'} justifyContent={'center'}>
+                        <Box my={{md: 0.5, xs: 0}} display={'flex'} width={'100%'} justifyContent={'center'}>
                             <IconButton onClick={handleInterChange} disabled={sourceLanguage === "" && targetLanguage === "" || isOn}>
                                 <CompareArrowsIcon sx={{rotate: '90deg'}} />
                             </IconButton>
@@ -199,7 +199,7 @@ const Index = () => {
                                 </MenuItem>
                             ))}
                         </CustomTextField>
-                        <Box mt={1.5} />
+                        <Box mt={{md: 1.5, xs: 0.5}} />
                         <Box display={'flex'} width={'100%'} justifyContent={'flex-end'}>
                             <Box display={'flex'} alignItems={'center'}>
                                 <Checkbox
@@ -213,7 +213,7 @@ const Index = () => {
                                 </Box>
                             </Box>
                         </Box>
-                        <Box mt={1.5} />
+                        <Box mt={{md: 1.5, xs: 0.5}} />
                         <CustomTextField
                             page={'login'}
                             label={isOn ? "Enter a prompt to generate text" : "Enter text to translate"}
@@ -225,7 +225,7 @@ const Index = () => {
                             multiline
                             rows={3}
                         />
-                        <Box mt={2} />
+                        <Box mt={{md: 2, xs: 1}} />
                         <Box display={'flex'} width={'100%'} justifyContent={'center'}>
                             <Button
                                 disabled={
@@ -254,7 +254,7 @@ const Index = () => {
                             </Button>
                         </Box>
 
-                        <Divider sx={{mt: 4, mb: 3}} />
+                        <Divider sx={{mt: {md: 4, xs: 2}, mb: {md: 3, xs: 1}}} />
 
                         {
                             loading ? (

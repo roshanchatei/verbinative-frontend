@@ -1,4 +1,4 @@
-import {Box, Button} from "@mui/material";
+import {Box, Button, useMediaQuery} from "@mui/material";
 import CustomTextField from "@/src/components/CustomTextField";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -10,6 +10,8 @@ const Index = ({email, setEmail, password, setPassword, confirmPassword, setConf
 
     const [isVisible1, setIsVisible1] = useState(false);
     const [isVisible2, setIsVisible2] = useState(false);
+
+    const isMobile = useMediaQuery((theme) => theme.breakpoints.down("md"));
 
     //change password visibility
     useEffect(() => {
@@ -25,7 +27,7 @@ const Index = ({email, setEmail, password, setPassword, confirmPassword, setConf
     return (
         <>
             <Box fontSize={'24px'} fontWeight={500}>
-                Create new Login credentials.
+                {isMobile ? "Create new credentials." : "Create new Login credentials."}
             </Box>
             <Box color={'#333333'} fontSize={'12px'}>
                 Enter your email ID to register your account and set a password for your account.

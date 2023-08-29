@@ -106,7 +106,7 @@ const Index = () => {
                         </Box>
                         <Box
                             mb={2}
-                            height={'250px'}
+                            height={{md: '250px', xs: '200px'}}
                             width={'100%'}
                             display={'flex'} flexDirection={'column'}
                             sx={{
@@ -117,7 +117,7 @@ const Index = () => {
                             <Grid container spacing={3} >
                                 {
                                     selectedList.map((each, index) => (
-                                        <Grid item xs={4} key={index}>
+                                        <Grid item md={4} xs={6} key={index}>
                                             <Chip
                                                 label={each?.username}
                                                 onDelete={() => {
@@ -146,7 +146,7 @@ const Index = () => {
                             </Grid>
 
                         </Box>
-                        <Box mt={4} />
+                        <Box mt={{md: 4, xs: 2}} />
                         <Button
                             disabled={selectedList.length < 3 || name === ''}
                             onClick={handleCreateGroup}

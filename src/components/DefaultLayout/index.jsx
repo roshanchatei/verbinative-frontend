@@ -161,7 +161,7 @@ const Index = (props) => {
 
 
             <Drawer anchor={'right'} open={mobOpen} onClose={handleMobDrawer}>
-                <Box width={drawerWidth}>
+                <Box width={{md: drawerWidth, xs: "100vw"}}>
                     <Box
                         width={"100%"}
                         sx={{

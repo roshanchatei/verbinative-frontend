@@ -22,7 +22,7 @@ const Index = () => {
     const [languageId, setLanguageId] = useState("");
 
 
-    const [current, setCurrent] = useState(1);
+    const [current, setCurrent] = useState(0);
     const [loading,  setLoading] = useState(false);
 
 
@@ -105,7 +105,8 @@ const Index = () => {
                     </Box>
                     <Box sx={{cursor: 'pointer'}} ml={0.5} fontWeight={500} fontSize={'14px'} color={'#006ff8'}
                          onClick={async () => {
-                             await Router.push('/login')
+                             if(!loading)
+                                await Router.push('/login')
                          }}
                     >
                         LOGIN

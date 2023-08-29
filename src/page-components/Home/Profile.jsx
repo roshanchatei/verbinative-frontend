@@ -79,7 +79,7 @@ const Profile = () => {
                         }
                     </Avatar>
                 </Box>
-                <Box mt={2} />
+                <Box mt={{md: 2, xs: 0}} />
                 <Box width={'100%'} display={'flex'} justifyContent={'flex-end'}>
                     {
                         canEdit ? (
@@ -155,7 +155,7 @@ const Profile = () => {
                         </MenuItem>
                     ))}
                 </CustomTextField>
-                <Box mt={11} />
+                <Box mt={{md: 11, xs: 5}} />
                 <Button
                     disabled={
                         loading ||

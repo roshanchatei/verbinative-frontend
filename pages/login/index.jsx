@@ -4,7 +4,7 @@ import {useRouter} from "next/router";
 import CustomTextField from "../../src/components/CustomTextField";
 
 //MUI
-import {Box, Button} from "@mui/material";
+import {Box, Button, CircularProgress} from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -60,24 +60,41 @@ const Index = () => {
                 localStorage.setItem("email", res.data.data.email);
                 localStorage.setItem("language", res.data.data.language);
                 localStorage.setItem("language_id", res.data.data.language_id);
-                await Router.push('/')
+                setLoading(false);
                 enqueueSnackbar("Login Successful", {
                     variant: "success",
                 });
+                Router.reload();
+                // await Router.push('/')
             } else if (res.message === "error") {
                 enqueueSnackbar("Login Unsuccessful: Invalid credentials", {
                     variant: "error",
                 });
+                setLoading(false);
             }
 
         }).catch((e) => console.log(e))
-
-        setLoading(false);
     }
 
 
     return (
         <>
+            {
+                loading && (
+                    <Box
+                        zIndex={10}
+                        position={'absolute'} width={'100%'}
+                        height={"100vh"}
+                        display={'flex'} alignItems={'center'} justifyContent={'center'}
+                        sx={{
+                            backdropFilter: "blur(2px)",
+                            backgroundColor: "rgba(193,193,193,0.22)",
+                        }}
+                    >
+                        <CircularProgress color={'accent'}/>
+                    </Box>
+                )
+            }
             <MainContainer current={0}>
                 <Box fontSize={'24px'} fontWeight={500}>
                     Login to your account.
@@ -143,7 +160,8 @@ const Index = () => {
                     </Box>
                     <Box sx={{cursor: 'pointer'}} mr={0.5} ml={0.5} fontWeight={500} fontSize={'14px'} color={'#006ff8'}
                          onClick={async () => {
-                             await Router.push('/sign-up')
+                             if(!loading)
+                                await Router.push('/sign-up')
                          }}
                     >
                         SIGNUP

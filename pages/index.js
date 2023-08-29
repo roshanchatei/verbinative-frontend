@@ -49,11 +49,11 @@ const Index = () => {
 
     return (
         <>
-            <Box width={'100%'}>
+            <Box width={'100%'} position={"relative"}>
                 <Grid container>
                     <Grid item md={5} xs={12}>
-                        <Box bgcolor={'#f1f1f1'} width={'100%'} borderRight={'1px solid #E1E1E1'}>
-                            <Box width={'100%'} p={2} borderBottom={'1px solid #E1E1E1'}>
+                        <Box bgcolor={'#f1f1f1'} width={'100%'} borderRight={'1px solid #E1E1E1'} sx={{overflow: "hidden"}}>
+                            <Box zIndex={100} position={{md: "static", xs: "fixed"}} bgcolor={'#f1f1f1'} width={'100%'} p={2} borderBottom={'1px solid #E1E1E1'}>
                                 <SearchAutoComplete type={'search'} chats={chats} setChats={setChats} />
                             </Box>
                             <Box
@@ -66,6 +66,8 @@ const Index = () => {
                                     //     display: 'none'
                                     // }
                                 }}
+                                pt={{md: 0, xs: 10}}
+                                pb={{md: 0, xs: 4}}
                             >
                                 {
                                     chatsLoading ? (
