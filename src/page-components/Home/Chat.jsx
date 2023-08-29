@@ -183,7 +183,7 @@ const Chat = ({current, setCurrent, loading, setLoading, handleClose}) => {
         <>
             <Box width={'100%'} height={isMobile ? "100vh" : 'calc(100vh - 48px)'} position={'relative'}>
 
-                <Box bgcolor={'#f6f6f6'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} width={'100%'} py={0.5} px={{md: 3, xs: 1.5}} pt={{md: 1.2, xs: 0.7}}>
+                <Box zIndex={100} position={{md: "static", xs: "fixed"}} top={0} bgcolor={'#f6f6f6'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} width={'100%'} py={0.5} px={{md: 3, xs: 1.5}} pt={{md: 1.2, xs: 0.7}}>
                     <Box display={'flex'} alignItems={'center'}>
                         <IconButton
                             sx={{pl: {md: 2, xs: 1.5}, py: 1.5}}
@@ -218,7 +218,7 @@ const Chat = ({current, setCurrent, loading, setLoading, handleClose}) => {
                         <Box
                             zIndex={10}
                             position={'absolute'} width={'100%'}
-                            height={isMobile ? 'calc(100vh - 120px)' : 'calc(100vh - 169px)'}
+                            height={isMobile ? '90vh' : 'calc(100vh - 169px)'}
                             display={'flex'} alignItems={'center'} justifyContent={'center'}
                             sx={{
                                 backdropFilter: "blur(2px)",
@@ -234,7 +234,7 @@ const Chat = ({current, setCurrent, loading, setLoading, handleClose}) => {
                     )
                 }
                 <Box
-                    height={isMobile ? '71vh' : 'calc(100vh - 169px)'}
+                    height={isMobile ? '90vh' : 'calc(100vh - 169px)'}
                     position={'absolute'} bottom={60}
                     width={'100%'}
                     display={'flex'} flexDirection={'column-reverse'}
@@ -260,6 +260,7 @@ const Chat = ({current, setCurrent, loading, setLoading, handleClose}) => {
                         // }
                         pageStart={0}
                     >
+                        {isMobile && <Box mt={18} />}
                         {
                             messageList?.length > 0 && (
                                 <>
@@ -276,7 +277,6 @@ const Chat = ({current, setCurrent, loading, setLoading, handleClose}) => {
                             )
                         }
                     </InfiniteScroll>
-
                 </Box>
 
                 <Box bgcolor={'#f6f6f6'} position={'absolute'} bottom={0} px={3} py={1} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'} borderTop={'1px solid #E1E1E1'}>
@@ -308,7 +308,7 @@ const Chat = ({current, setCurrent, loading, setLoading, handleClose}) => {
                     />
                     <IconButton
                         onClick={handleSendMessage}
-                        disabled={message === ''}
+                        disabled={message === '' || loading}
                     >
                         <SendIcon />
                     </IconButton>

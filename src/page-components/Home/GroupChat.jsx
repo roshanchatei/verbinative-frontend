@@ -161,7 +161,7 @@ const Index = ({current, loading}) => {
                         </Box>
                         <Box px={4} mt={5}>
                             <Box mb={10} width={'100%'} display={'flex'} alignItems={'center'} flexDirection={'column'}>
-                                <Avatar
+                                <Avatar src={current?.avatar}
                                     sx={{background: '#181935', width: 150, height: 150}}
                                 >
                                     <GroupIcon fontSize={'large'} />
@@ -335,8 +335,8 @@ const Index = ({current, loading}) => {
                         alignItems={"center"}
                     >
                         <Box
-                            py={3}
                             px={3}
+                            py={3}
                             zIndex={1}
                             width={drawerWidth}
                             bgcolor={"#FFF"}
@@ -351,8 +351,6 @@ const Index = ({current, loading}) => {
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "space-between",
-                                    px: 3,
-                                    pt: 4,
                                 }}
                                 onClick={() => {
                                     setInfoOpen(false);
@@ -366,18 +364,18 @@ const Index = ({current, loading}) => {
                                     <CloseIcon sx={{color: 'red'}} />
                                 </IconButton>
                             </Box>
-                            <Box width={"100%"} px={3} mt={5}>
-                                <Box mb={10} width={'100%'} display={'flex'} alignItems={'center'} flexDirection={'column'}>
-                                    <Avatar
+                            <Box width={"100%"} mt={4}>
+                                <Box mb={4} width={'100%'} display={'flex'} alignItems={'center'} flexDirection={'column'}>
+                                    <Avatar src={current?.avatar}
                                         sx={{background: '#181935', width: 150, height: 150}}
                                     >
                                         <GroupIcon fontSize={'large'} />
                                     </Avatar>
-                                    <Box mt={2} fontSize={'20px'} fontWeight={500}>
+                                    <Box mt={2} fontSize={'20px'} fontWeight={700}>
                                         {current?.name}
                                     </Box>
                                 </Box>
-                                <Box mb={2} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
+                                <Box mb={1.5} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'space-between'}>
                                     <Box fontSize={'20px'} fontWeight={500}>
                                         {current?.user_ids.length} Participants
                                     </Box>
@@ -392,9 +390,9 @@ const Index = ({current, loading}) => {
                                     </Box>
                                 </Box>
                                 <Box
-                                    mb={6}
-                                    pr={2}
-                                    height={'200px'}
+                                    mb={3}
+                                    pr={1}
+                                    height={'150px'}
                                     width={'100%'}
                                     display={'flex'} flexDirection={'column'}
                                     sx={{
@@ -404,7 +402,7 @@ const Index = ({current, loading}) => {
                                 >
                                     {
                                         detailLoading ? (
-                                            <Box height={'280px'} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
+                                            <Box height={'150px'} width={'100%'} display={'flex'} alignItems={'center'} justifyContent={'center'}>
                                                 <CircularProgress size={28} />
                                             </Box>
                                         ) : (
@@ -462,8 +460,6 @@ const Index = ({current, loading}) => {
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "space-between",
-                                    px: 3,
-                                    pt: 4,
                                 }}
                                 onClick={() => {
                                     setAddOpen(false);
@@ -477,14 +473,14 @@ const Index = ({current, loading}) => {
                                     <CloseIcon sx={{color: 'red'}} />
                                 </IconButton>
                             </Box>
-                            <Box width={"100%"} px={3} mt={5}>
+                            <Box width={"100%"} mt={5}>
                                 <SearchAutoComplete type={'add'} selectedList={selectedList} setSelectedList={setSelectedList} />
                                 <Box mb={2} mt={10} fontSize={'20px'} fontWeight={500}>
                                     Participants to be added
                                 </Box>
                                 <Box
                                     mb={2}
-                                    height={'300px'}
+                                    height={'200px'}
                                     width={'100%'}
                                     display={'flex'} flexDirection={'column'}
                                     sx={{
@@ -495,7 +491,7 @@ const Index = ({current, loading}) => {
                                     <Grid container spacing={3} >
                                         {
                                             selectedList.map((each, index) => (
-                                                <Grid item xs={4} key={index}>
+                                                <Grid item md={4} xs={6} key={index}>
                                                     <Chip
                                                         label={each?.username}
                                                         onDelete={() => {
@@ -539,7 +535,7 @@ const Index = ({current, loading}) => {
                                             backgroundColor: "#006ff8",
                                         },
                                         textTransform: 'none',
-                                        mb: 4
+                                        mb: 2
                                     }}
                                 >
                                     Add

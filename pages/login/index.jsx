@@ -91,7 +91,7 @@ const Index = () => {
                             backgroundColor: "rgba(193,193,193,0.22)",
                         }}
                     >
-                        <CircularProgress color={'accent'}/>
+                        <CircularProgress sx={{mt: {md: -5, xs: -10}}} color={'accent'}/>
                     </Box>
                 )
             }

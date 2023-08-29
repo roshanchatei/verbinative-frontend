@@ -52,7 +52,7 @@ const ChatCard = ({person, current, setCurrent, loading, handleClickOpen}) => {
                 {
                     current?.chatroom_id === person.chatroom_id && <ArrowRightIcon sx={{ml: -3}} />
                 }
-                <Avatar sx={{backgroundColor: '#131348'}}>
+                <Avatar sx={{backgroundColor: '#131348'}} src={person?.avatar}>
                     {
                         isServer ? <GroupIcon /> : <PersonIcon />
                     }

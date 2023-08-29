@@ -46,7 +46,9 @@ const Profile = () => {
             redirect: 'follow'
         };
 
-        fetch(`${baseURL}/user/${userId}/`, requestOptions)
+        console.log("inside api")
+
+        fetch(`${baseURL}/user/${userId}`, requestOptions)
             .then(response => response.json())
             .then(res =>{
                 localStorage.setItem("token", res.data.data.token);

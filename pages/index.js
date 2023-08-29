@@ -6,6 +6,7 @@ import SearchAutoComplete from "@/src/page-components/Home/SearchAutoComplete";
 import {baseURL} from "@/src/store/config";
 import CircularProgress from "@mui/material/CircularProgress";
 import * as React from 'react';
+import {faker} from "@faker-js/faker";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -38,10 +39,19 @@ const Index = () => {
 
         const user_id = localStorage.getItem('id')
 
+
         fetch(`${baseURL}/chat/user/${user_id}/`, requestOptions)
             .then(response => response.json())
             .then(result => {
-                setChats(result?.data?.chatroom.reverse())
+                const modifiedChats = result?.data?.chatroom.reverse().map(chat => {
+                    return {
+                        ...chat,
+                        avatar: chat.user_ids.length > 2 ? faker.image.avatarGitHub() : faker.image.avatarLegacy()
+                    };
+                });
+                setChats(modifiedChats);
+                console.log(modifiedChats)
+                // setChats(result?.data?.chatroom.reverse())
             })
             .catch(error => console.log('error', error))
             .finally(() => setChatsLoading(false))
@@ -52,8 +62,13 @@ const Index = () => {
             <Box width={'100%'} position={"relative"}>
                 <Grid container>
                     <Grid item md={5} xs={12}>
-                        <Box bgcolor={'#f1f1f1'} width={'100%'} borderRight={'1px solid #E1E1E1'} sx={{overflow: "hidden"}}>
-                            <Box zIndex={100} position={{md: "static", xs: "fixed"}} bgcolor={'#f1f1f1'} width={'100%'} p={2} borderBottom={'1px solid #E1E1E1'}>
+                        <Box
+                            bgcolor={'#f1f1f1'}
+                            width={'100%'}
+                            borderRight={'1px solid #E1E1E1'}
+                            sx={{overflow: "hidden"}}
+                        >
+                            <Box zIndex={100} position={{md: "static", xs: "fixed"}} top={50} bgcolor={'#f1f1f1'} width={'100%'} p={2} borderBottom={'1px solid #E1E1E1'}>
                                 <SearchAutoComplete type={'search'} chats={chats} setChats={setChats} />
                             </Box>
                             <Box
