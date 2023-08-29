@@ -226,9 +226,9 @@ const Chat = ({current, setCurrent, loading, setLoading, handleClose}) => {
                             }}
                         >
                             <CircularProgress
-                                variant="determinate"
+                                // variant="determinate"
                                 color={'accent'}
-                                value={(messageListLength / totalMessageLength || 0) * 100}
+                                // value={(messageListLength / totalMessageLength || 0) * 100}
                             />
                         </Box>
                     )
